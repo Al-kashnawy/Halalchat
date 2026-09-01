@@ -1,4 +1,9 @@
-<!-- Halal Chat — community chat with channels, DMs, and moderation -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Halal Chat</title>
 <style>
   :root{
     --hc-bg: #F6F3EA;
@@ -11,6 +16,7 @@
     --hc-line: #E4DFD0;
     --hc-danger: #A5573C;
   }
+  html,body{ margin:0; background:#DDD8C8; }
   #hc-wrap{ position: relative; }
   #hc-root{
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -18,160 +24,85 @@
     color: var(--hc-ink);
     max-width: 480px;
     margin: 0 auto;
-    height: 640px;
+    height: 100vh;
+    max-height: 800px;
     display: flex;
     flex-direction: column;
-    border-radius: 18px;
     overflow: hidden;
-    border: 1px solid var(--hc-line);
   }
-  /* ---- header ---- */
+  @media (min-width: 481px){
+    #hc-root{ height: 720px; border-radius: 18px; border: 1px solid var(--hc-line); margin-top: 24px; }
+  }
   #hc-header{
-    background: var(--hc-primary);
-    color: #F6F3EA;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
+    background: var(--hc-primary); color: #F6F3EA; padding: 14px 16px;
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
   }
   .hc-icon-btn{
-    background: none; border: none; color: #F6F3EA;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    background: none; border: none; color: #F6F3EA; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
     width: 30px; height: 30px; flex-shrink: 0; padding: 0;
   }
-  #hc-mark{
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: var(--hc-gold);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  #hc-mark{ width: 32px; height: 32px; border-radius: 50%; background: var(--hc-gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   #hc-header-text{ flex: 1; min-width: 0; }
-  #hc-header h1{
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: 18px;
-    margin: 0;
-    letter-spacing: 0.2px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  #hc-header h1{ font-family: Georgia, "Times New Roman", serif; font-size: 18px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #hc-header p{ margin: 2px 0 0; font-size: 11.5px; color: #CFE0D8; }
-  #hc-new-btn{
-    background: var(--hc-gold); border: none; color: #2B2110;
-    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; cursor: pointer;
-  }
-
-  /* ---- list screen ---- */
+  #hc-new-btn{ background: var(--hc-gold); border: none; color: #2B2110; width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
   #hc-list-screen{ flex: 1; overflow-y: auto; background: var(--hc-bg); }
-  .hc-section-title{
-    font-size: 12px; color: var(--hc-ink-soft); font-weight: 600;
-    padding: 14px 16px 6px;
-  }
-  .hc-list-item{
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 16px; cursor: pointer; background: var(--hc-bg);
-  }
+  .hc-section-title{ font-size: 12px; color: var(--hc-ink-soft); font-weight: 600; padding: 14px 16px 6px; }
+  .hc-list-item{ display: flex; align-items: center; gap: 12px; padding: 10px 16px; cursor: pointer; background: var(--hc-bg); }
   .hc-list-item:active{ background: var(--hc-primary-soft); }
-  .hc-list-avatar{
-    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 600; color: #fff;
-  }
+  .hc-list-avatar{ width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #fff; }
   .hc-list-body{ flex: 1; min-width: 0; }
   .hc-list-name{ font-size: 14.5px; font-weight: 600; margin: 0; }
-  .hc-list-sub{
-    font-size: 12.5px; color: var(--hc-ink-soft); margin: 2px 0 0;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  #hc-empty-list{
-    text-align: center; color: var(--hc-ink-soft); font-size: 13px;
-    padding: 40px 24px;
-  }
-
-  /* ---- chat screen ---- */
+  .hc-list-sub{ font-size: 12.5px; color: var(--hc-ink-soft); margin: 2px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #hc-empty-list{ text-align: center; color: var(--hc-ink-soft); font-size: 13px; padding: 40px 24px; }
   #hc-chat-screen{ flex: 1; display: none; flex-direction: column; min-height: 0; }
-  #hc-messages{
-    flex: 1; overflow-y: auto; padding: 16px 12px;
-    display: flex; flex-direction: column; gap: 10px; background: var(--hc-bg);
-  }
+  #hc-messages{ flex: 1; overflow-y: auto; padding: 16px 12px; display: flex; flex-direction: column; gap: 10px; background: var(--hc-bg); }
   .hc-row{ display: flex; gap: 8px; align-items: flex-end; }
   .hc-row.mine{ flex-direction: row-reverse; }
-  .hc-avatar{
-    width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 600; color: #fff;
-  }
+  .hc-avatar{ width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; }
   .hc-bubble-wrap{ max-width: 75%; display: flex; flex-direction: column; }
   .hc-name{ font-size: 11px; color: var(--hc-ink-soft); margin: 0 0 3px 2px; }
   .hc-row.mine .hc-name{ text-align: right; margin: 0 2px 3px 0; }
-  .hc-bubble{
-    padding: 9px 13px; border-radius: 16px; font-size: 14.5px; line-height: 1.4;
-    word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.06); cursor: pointer;
-  }
+  .hc-bubble{ padding: 9px 13px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.06); cursor: pointer; }
   .hc-row.theirs .hc-bubble{ background: #fff; color: var(--hc-ink); border-bottom-left-radius: 4px; }
   .hc-row.mine .hc-bubble{ background: var(--hc-primary); color: var(--hc-bg); border-bottom-right-radius: 4px; }
   .hc-meta-row{ display: flex; gap: 8px; align-items: center; margin-top: 3px; }
   .hc-row.mine .hc-meta-row{ justify-content: flex-end; }
   .hc-time{ font-size: 10px; color: var(--hc-ink-soft); }
   .hc-actions{ display: flex; gap: 10px; margin-top: 4px; }
-  .hc-action-link{
-    font-size: 11px; border: none; background: none; cursor: pointer; padding: 0;
-    text-decoration: underline;
-  }
+  .hc-action-link{ font-size: 11px; border: none; background: none; cursor: pointer; padding: 0; text-decoration: underline; }
   .hc-action-link.delete{ color: var(--hc-danger); }
   .hc-action-link.report{ color: var(--hc-ink-soft); }
-  #hc-inputbar{
-    display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--hc-line);
-    background: var(--hc-panel); flex-shrink: 0;
-  }
-  #hc-input{
-    flex: 1; border: 1px solid var(--hc-line); border-radius: 20px; padding: 10px 15px;
-    font-size: 14.5px; outline: none; background: var(--hc-bg); color: var(--hc-ink);
-  }
+  #hc-inputbar{ display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--hc-line); background: var(--hc-panel); flex-shrink: 0; }
+  #hc-input{ flex: 1; border: 1px solid var(--hc-line); border-radius: 20px; padding: 10px 15px; font-size: 14.5px; outline: none; background: var(--hc-bg); color: var(--hc-ink); }
   #hc-input:focus{ border-color: var(--hc-primary); }
-  #hc-send{
-    border: none; background: var(--hc-primary); color: #fff; width: 40px; height: 40px;
-    border-radius: 50%; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  }
+  #hc-send{ border: none; background: var(--hc-primary); color: #fff; width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   #hc-send:disabled{ opacity: 0.5; cursor: default; }
-
-  /* ---- overlays ---- */
-  .hc-overlay{
-    position: absolute; inset: 0; background: rgba(35,49,43,0.55);
-    display: none; align-items: center; justify-content: center; padding: 24px; z-index: 5;
-  }
+  .hc-overlay{ position: absolute; inset: 0; background: rgba(35,49,43,0.55); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 5; }
   .hc-overlay.show{ display: flex; }
-  .hc-card{
-    background: var(--hc-panel); border-radius: 16px; padding: 22px; max-width: 320px;
-    width: 100%; text-align: left; max-height: 520px; overflow-y: auto;
-  }
+  .hc-card{ background: var(--hc-panel); border-radius: 16px; padding: 22px; max-width: 320px; width: 100%; text-align: left; max-height: 520px; overflow-y: auto; }
   .hc-card h2{ font-family: Georgia, serif; color: var(--hc-primary); margin: 0 0 6px; text-align: center; }
   .hc-card p{ font-size: 13px; color: var(--hc-ink-soft); margin: 0 0 16px; text-align: center; }
-  .hc-text-input{
-    width: 100%; box-sizing: border-box; padding: 10px 13px; border-radius: 10px;
-    border: 1px solid var(--hc-line); font-size: 14.5px; margin-bottom: 12px;
-  }
-  .hc-primary-btn{
-    width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--hc-primary);
-    color: #fff; font-size: 14.5px; cursor: pointer; margin-bottom: 8px;
-  }
-  .hc-ghost-btn{
-    width: 100%; padding: 10px; border: 1px solid var(--hc-line); border-radius: 10px;
-    background: none; color: var(--hc-ink-soft); font-size: 13.5px; cursor: pointer;
-  }
+  .hc-text-input{ width: 100%; box-sizing: border-box; padding: 10px 13px; border-radius: 10px; border: 1px solid var(--hc-line); font-size: 14.5px; margin-bottom: 12px; }
+  .hc-primary-btn{ width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--hc-primary); color: #fff; font-size: 14.5px; cursor: pointer; margin-bottom: 8px; }
+  .hc-ghost-btn{ width: 100%; padding: 10px; border: 1px solid var(--hc-line); border-radius: 10px; background: none; color: var(--hc-ink-soft); font-size: 13.5px; cursor: pointer; }
   .hc-tab-row{ display: flex; gap: 8px; margin-bottom: 14px; }
-  .hc-tab{
-    flex: 1; padding: 8px; text-align: center; border-radius: 8px; font-size: 13px;
-    background: var(--hc-bg); color: var(--hc-ink-soft); cursor: pointer;
-  }
+  .hc-tab{ flex: 1; padding: 8px; text-align: center; border-radius: 8px; font-size: 13px; background: var(--hc-bg); color: var(--hc-ink-soft); cursor: pointer; }
   .hc-tab.active{ background: var(--hc-primary); color: #fff; }
-  .hc-member-item{
-    display: flex; align-items: center; gap: 10px; padding: 8px 4px; cursor: pointer; border-radius: 8px;
-  }
+  .hc-member-item{ display: flex; align-items: center; gap: 10px; padding: 8px 4px; cursor: pointer; border-radius: 8px; }
   .hc-member-item:active{ background: var(--hc-primary-soft); }
-  #hc-note{ font-size: 11px; color: var(--hc-danger); margin-top: -6px; margin-bottom: 10px; min-height: 14px; }
+  #hc-config-error{ position:fixed; inset:0; background:#23312B; color:#F6F3EA; display:none; align-items:center; justify-content:center; padding:32px; font-family:-apple-system,sans-serif; text-align:center; z-index:50; }
 </style>
+</head>
+<body>
+
+<div id="hc-config-error">
+  <div>
+    <h2 style="font-family:Georgia,serif;">Firebase isn't configured yet</h2>
+    <p>Open this file and fill in your <code>firebaseConfig</code> values near the top of the script, then redeploy.</p>
+  </div>
+</div>
 
 <div id="hc-wrap">
   <div id="hc-root">
@@ -184,7 +115,7 @@
       </div>
       <div id="hc-header-text">
         <h1 id="hc-title">Halal Chat</h1>
-        <p id="hc-subtitle">Loading community…</p>
+        <p id="hc-subtitle">Connecting…</p>
       </div>
       <button id="hc-new-btn" title="New channel or message">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#2B2110" stroke-width="2.4" stroke-linecap="round"/></svg>
@@ -210,7 +141,6 @@
     </div>
   </div>
 
-  <!-- Join overlay -->
   <div id="hc-join-overlay" class="hc-overlay show">
     <div class="hc-card">
       <h2>Join Halal Chat</h2>
@@ -221,7 +151,6 @@
     </div>
   </div>
 
-  <!-- New channel / DM overlay -->
   <div id="hc-new-overlay" class="hc-overlay">
     <div class="hc-card">
       <h2>Start something new</h2>
@@ -243,360 +172,352 @@
   </div>
 </div>
 
-<script>
-(function(){
-  const POLL_MS = 3000;
-  const MAX_MESSAGES = 300;
-  const DEFAULT_CHANNELS = [
-    {id:'general', name:'General'},
-    {id:'announcements', name:'Announcements'}
-  ];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs,
+  onSnapshot, query, where, orderBy, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  let myName = null;
-  let channels = [];
-  let dmIndex = [];
-  let users = [];
-  let currentChat = null; // {type:'channel'|'dm', id, title}
-  let expandedIds = new Set();
-  let listPollTimer = null;
-  let chatPollTimer = null;
+// ============================================================
+// 1) PASTE YOUR FIREBASE CONFIG HERE
+//    Firebase console → Project settings → General → Your apps → SDK setup
+// ============================================================
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+// ============================================================
 
-  const el = (id) => document.getElementById(id);
-  const colors = ['#1F4B3F','#B98B2A','#6E5A9E','#3E7C8C','#A5573C','#5B7A3A'];
-  function colorFor(name){
-    let h = 0;
-    for (let i=0;i<name.length;i++) h = name.charCodeAt(i) + ((h<<5)-h);
-    return colors[Math.abs(h) % colors.length];
-  }
-  function initials(name){ return name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
-  function fmtTime(ts){ return new Date(ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
-  function dmKeyFor(a,b){ return 'dm:' + [a,b].sort().join('|'); }
-  function msgKeyFor(chatKey){ return 'msg:' + chatKey; }
+if (firebaseConfig.apiKey === "YOUR_API_KEY"){
+  document.getElementById('hc-config-error').style.display = 'flex';
+  throw new Error('Firebase config not set');
+}
 
-  // ---------- storage helpers ----------
-  async function safeGet(key, shared){
-    try{
-      const res = await window.storage.get(key, shared);
-      return res ? res.value : null;
-    } catch(e){ return null; }
-  }
-  async function safeSet(key, value, shared){
-    try{ return await window.storage.set(key, value, shared); }
-    catch(e){ console.error('storage set failed', key, e); return null; }
-  }
-  async function loadJSON(key, shared, fallback){
-    const v = await safeGet(key, shared);
-    if (!v) return fallback;
-    try{ return JSON.parse(v); } catch(e){ return fallback; }
-  }
+const app = initializeApp(firebaseConfig);
+const db = getDb();
+function getDb(){ return getFirestore(app); }
 
-  async function loadUsers(){ users = await loadJSON('hc-users', true, []); }
-  async function addUserIfMissing(name){
-    await loadUsers();
-    if (!users.find(u => u.name === name)){
-      users.push({name, joinedAt: Date.now()});
-      await safeSet('hc-users', JSON.stringify(users), true);
+const DEFAULT_CHANNELS = [
+  {id:'general', name:'General'},
+  {id:'announcements', name:'Announcements'}
+];
+
+let myName = null;
+let channels = [];
+let dmThreads = []; // {key,a,b}
+let currentChat = null; // {type, id (chatKey), title}
+let expandedIds = new Set();
+let unsubMessages = null;
+let unsubChannels = null;
+let unsubDmA = null, unsubDmB = null;
+
+const el = (id) => document.getElementById(id);
+const colors = ['#1F4B3F','#B98B2A','#6E5A9E','#3E7C8C','#A5573C','#5B7A3A'];
+function colorFor(name){ let h=0; for(let i=0;i<name.length;i++) h = name.charCodeAt(i) + ((h<<5)-h); return colors[Math.abs(h)%colors.length]; }
+function initials(name){ return name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function fmtTime(ts){ if(!ts) return ''; const d = ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
+function slug(name){ return name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('ch'+Date.now()); }
+function dmKeyFor(a,b){ return 'dm:' + [a,b].sort().join('|'); }
+function safeDocId(name){ return name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ---------- users ----------
+async function addUserIfMissing(name){
+  await setDoc(doc(db,'users', safeDocId(name)), { name, joinedAt: serverTimestamp() }, { merge: true });
+}
+async function loadAllUsers(){
+  const snap = await getDocs(collection(db,'users'));
+  return snap.docs.map(d => d.data());
+}
+
+// ---------- channels ----------
+async function ensureDefaultChannels(){
+  const snap = await getDocs(collection(db,'channels'));
+  if (snap.empty){
+    for (const c of DEFAULT_CHANNELS){
+      await setDoc(doc(db,'channels', c.id), { name: c.name });
     }
   }
-  async function loadChannels(){
-    channels = await loadJSON('hc-channels', true, null);
-    if (!channels){
-      channels = DEFAULT_CHANNELS;
-      await safeSet('hc-channels', JSON.stringify(channels), true);
-    }
-  }
-  async function createChannel(name){
-    const id = name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('ch' + Date.now());
-    await loadChannels();
-    if (channels.find(c => c.id === id)) return id;
-    channels.push({id, name: name.trim()});
-    await safeSet('hc-channels', JSON.stringify(channels), true);
-    return id;
-  }
-  async function loadDmIndex(){ dmIndex = await loadJSON('hc-dm-index', true, []); }
-  async function ensureDmPair(a,b){
-    await loadDmIndex();
-    const key = dmKeyFor(a,b);
-    if (!dmIndex.find(p => p.key === key)){
-      dmIndex.push({key, a, b, ts: Date.now()});
-      await safeSet('hc-dm-index', JSON.stringify(dmIndex), true);
-    }
-  }
-
-  async function loadMessages(chatKey){ return await loadJSON(msgKeyFor(chatKey), true, []); }
-  async function saveMessages(chatKey, list){
-    const trimmed = list.slice(-MAX_MESSAGES);
-    await safeSet(msgKeyFor(chatKey), JSON.stringify(trimmed), true);
-    return trimmed;
-  }
-  async function reportMessage(chatKey, msg){
-    const reports = await loadJSON('hc-reports', true, []);
-    reports.push({chatKey, msgId: msg.id, text: msg.text, author: msg.name, reportedBy: myName, ts: Date.now()});
-    await safeSet('hc-reports', JSON.stringify(reports.slice(-500)), true);
-  }
-
-  // ---------- rendering: list screen ----------
-  function renderListScreen(){
-    el('hc-title').textContent = 'Halal Chat';
-    el('hc-subtitle').textContent = myName ? ('Signed in as ' + myName) : '';
-    el('hc-back').style.display = 'none';
-
-    const chList = el('hc-channel-list');
-    chList.innerHTML = '';
-    channels.forEach(c => {
-      const item = document.createElement('div');
-      item.className = 'hc-list-item';
-      item.innerHTML = `
-        <div class="hc-list-avatar" style="background:${colorFor(c.id)}">#</div>
-        <div class="hc-list-body">
-          <p class="hc-list-name">${escapeHtml(c.name)}</p>
-          <p class="hc-list-sub">Community channel</p>
-        </div>`;
-      item.addEventListener('click', () => openChat('channel', c.id, c.name));
-      chList.appendChild(item);
-    });
-
-    const dmList = el('hc-dm-list');
-    dmList.innerHTML = '';
-    const myDms = dmIndex.filter(p => p.a === myName || p.b === myName);
-    myDms.forEach(p => {
-      const other = p.a === myName ? p.b : p.a;
-      const item = document.createElement('div');
-      item.className = 'hc-list-item';
-      item.innerHTML = `
-        <div class="hc-list-avatar" style="background:${colorFor(other)}">${initials(other)}</div>
-        <div class="hc-list-body">
-          <p class="hc-list-name">${escapeHtml(other)}</p>
-          <p class="hc-list-sub">Direct message</p>
-        </div>`;
-      item.addEventListener('click', () => openChat('dm', p.key, other));
-      dmList.appendChild(item);
-    });
-
-    el('hc-empty-list').style.display = myDms.length === 0 ? 'block' : 'none';
-  }
-
-  function escapeHtml(s){
-    const d = document.createElement('div');
-    d.textContent = s;
-    return d.innerHTML;
-  }
-
-  // ---------- rendering: chat screen ----------
-  function renderMessages(list){
-    const messagesEl = el('hc-messages');
-    if (list.length === 0){
-      messagesEl.innerHTML = '<div id="hc-empty">No messages yet. Be the first to say salam 👋</div>';
-      return;
-    }
-    const shouldStick = messagesEl.scrollTop + messagesEl.clientHeight >= messagesEl.scrollHeight - 40;
-    messagesEl.innerHTML = '';
-    list.forEach(m => {
-      const mine = m.name === myName;
-      const row = document.createElement('div');
-      row.className = 'hc-row ' + (mine ? 'mine' : 'theirs');
-
-      const avatar = document.createElement('div');
-      avatar.className = 'hc-avatar';
-      avatar.style.background = colorFor(m.name);
-      avatar.textContent = initials(m.name);
-
-      const wrap = document.createElement('div');
-      wrap.className = 'hc-bubble-wrap';
-
-      if (!mine){
-        const nameEl = document.createElement('p');
-        nameEl.className = 'hc-name';
-        nameEl.textContent = m.name;
-        wrap.appendChild(nameEl);
-      }
-
-      const bubble = document.createElement('div');
-      bubble.className = 'hc-bubble';
-      bubble.textContent = m.text;
-      bubble.addEventListener('click', () => {
-        if (expandedIds.has(m.id)) expandedIds.delete(m.id); else expandedIds.add(m.id);
-        renderMessages(list);
-      });
-      wrap.appendChild(bubble);
-
-      const metaRow = document.createElement('div');
-      metaRow.className = 'hc-meta-row';
-      const time = document.createElement('span');
-      time.className = 'hc-time';
-      time.textContent = fmtTime(m.ts);
-      metaRow.appendChild(time);
-      wrap.appendChild(metaRow);
-
-      if (expandedIds.has(m.id)){
-        const actions = document.createElement('div');
-        actions.className = 'hc-actions';
-        if (mine){
-          const del = document.createElement('button');
-          del.className = 'hc-action-link delete';
-          del.textContent = 'Delete';
-          del.addEventListener('click', (e) => { e.stopPropagation(); deleteMessage(m.id); });
-          actions.appendChild(del);
-        } else {
-          const rep = document.createElement('button');
-          rep.className = 'hc-action-link report';
-          rep.textContent = 'Report';
-          rep.addEventListener('click', (e) => { e.stopPropagation(); handleReport(m); });
-          actions.appendChild(rep);
-        }
-        wrap.appendChild(actions);
-      }
-
-      row.appendChild(avatar);
-      row.appendChild(wrap);
-      messagesEl.appendChild(row);
-    });
-    if (shouldStick) messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  async function deleteMessage(id){
-    const list = await loadMessages(currentChat.id);
-    const filtered = list.filter(m => m.id !== id);
-    const saved = await saveMessages(currentChat.id, filtered);
-    expandedIds.delete(id);
-    renderMessages(saved);
-  }
-
-  async function handleReport(msg){
-    await reportMessage(currentChat.id, msg);
-    expandedIds.delete(msg.id);
-    const list = await loadMessages(currentChat.id);
-    renderMessages(list);
-    const btn = el('hc-send');
-    const old = el('hc-title').textContent;
-    el('hc-subtitle').textContent = 'Message reported — thank you';
-    setTimeout(() => { if (currentChat) el('hc-subtitle').textContent = currentChat.title; }, 2000);
-  }
-
-  // ---------- navigation ----------
-  async function openChat(type, id, title){
-    currentChat = {type, id, title};
-    expandedIds = new Set();
-    el('hc-list-screen').style.display = 'none';
-    el('hc-chat-screen').style.display = 'flex';
-    el('hc-back').style.display = 'flex';
-    el('hc-title').textContent = title;
-    el('hc-subtitle').textContent = type === 'channel' ? 'Community channel' : 'Direct message';
-    const list = await loadMessages(id);
-    renderMessages(list);
-    if (chatPollTimer) clearInterval(chatPollTimer);
-    chatPollTimer = setInterval(async () => {
-      if (!currentChat) return;
-      const l = await loadMessages(currentChat.id);
-      renderMessages(l);
-    }, POLL_MS);
-  }
-
-  function goToList(){
-    currentChat = null;
-    if (chatPollTimer) clearInterval(chatPollTimer);
-    el('hc-chat-screen').style.display = 'none';
-    el('hc-list-screen').style.display = 'block';
-    renderListScreen();
-  }
-
-  async function sendMessage(){
-    const input = el('hc-input');
-    const text = input.value.trim();
-    if (!text || !myName || !currentChat) return;
-    el('hc-send').disabled = true;
-    const list = await loadMessages(currentChat.id);
-    list.push({id: Date.now() + '-' + Math.random().toString(36).slice(2,7), name: myName, text, ts: Date.now()});
-    const saved = await saveMessages(currentChat.id, list);
-    renderMessages(saved);
-    input.value = '';
-    el('hc-send').disabled = false;
-    input.focus();
-  }
-
-  // ---------- new channel / DM overlay ----------
-  function openNewOverlay(){
-    el('hc-new-overlay').classList.add('show');
-    switchTab('channel');
-    renderMemberList();
-  }
-  function closeNewOverlay(){ el('hc-new-overlay').classList.remove('show'); }
-  function switchTab(tab){
-    el('hc-tab-channel').classList.toggle('active', tab === 'channel');
-    el('hc-tab-dm').classList.toggle('active', tab === 'dm');
-    el('hc-panel-channel').style.display = tab === 'channel' ? 'block' : 'none';
-    el('hc-panel-dm').style.display = tab === 'dm' ? 'block' : 'none';
-  }
-  async function renderMemberList(){
-    await loadUsers();
-    const others = users.filter(u => u.name !== myName);
-    const listEl = el('hc-member-list');
-    listEl.innerHTML = '';
-    others.forEach(u => {
-      const item = document.createElement('div');
-      item.className = 'hc-member-item';
-      item.innerHTML = `<div class="hc-list-avatar" style="width:32px;height:32px;font-size:12px;background:${colorFor(u.name)}">${initials(u.name)}</div><span>${escapeHtml(u.name)}</span>`;
-      item.addEventListener('click', async () => {
-        await ensureDmPair(myName, u.name);
-        closeNewOverlay();
-        openChat('dm', dmKeyFor(myName, u.name), u.name);
-      });
-      listEl.appendChild(item);
-    });
-    el('hc-member-empty').style.display = others.length === 0 ? 'block' : 'none';
-  }
-
-  // ---------- init / join ----------
-  async function loadUsername(){ return await safeGet('username', false); }
-  async function saveUsername(name){ await safeSet('username', name, false); }
-
-  async function bootAfterJoin(){
-    el('hc-join-overlay').classList.remove('show');
-    await Promise.all([loadChannels(), loadDmIndex(), addUserIfMissing(myName)]);
-    goToList();
-    if (listPollTimer) clearInterval(listPollTimer);
-    listPollTimer = setInterval(async () => {
-      if (currentChat) return;
-      await Promise.all([loadChannels(), loadDmIndex()]);
-      renderListScreen();
-    }, POLL_MS);
-  }
-
-  async function init(){
-    myName = await loadUsername();
-    if (myName){
-      await bootAfterJoin();
-    }
-  }
-
-  el('hc-join').addEventListener('click', async () => {
-    const name = el('hc-name-input').value.trim();
-    if (!name){ el('hc-join-note').textContent = 'Please enter a name to continue.'; return; }
-    myName = name;
-    await saveUsername(name);
-    await bootAfterJoin();
+}
+function listenChannels(cb){
+  return onSnapshot(collection(db,'channels'), (snap) => {
+    channels = snap.docs.map(d => ({ id: d.id, name: d.data().name }));
+    cb();
   });
-  el('hc-name-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') el('hc-join').click(); });
+}
+async function createChannel(name){
+  const id = slug(name);
+  await setDoc(doc(db,'channels', id), { name: name.trim() }, { merge: true });
+  return id;
+}
 
-  el('hc-back').addEventListener('click', goToList);
-  el('hc-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
-  el('hc-send').addEventListener('click', sendMessage);
+// ---------- dm threads ----------
+function listenDmThreads(cb){
+  const qa = query(collection(db,'dmThreads'), where('a','==', myName));
+  const qb = query(collection(db,'dmThreads'), where('b','==', myName));
+  let resultsA = [], resultsB = [];
+  const merge = () => {
+    const map = new Map();
+    [...resultsA, ...resultsB].forEach(t => map.set(t.key, t));
+    dmThreads = Array.from(map.values());
+    cb();
+  };
+  unsubDmA = onSnapshot(qa, (snap) => { resultsA = snap.docs.map(d => d.data()); merge(); });
+  unsubDmB = onSnapshot(qb, (snap) => { resultsB = snap.docs.map(d => d.data()); merge(); });
+}
+async function ensureDmPair(a,b){
+  const key = dmKeyFor(a,b);
+  await setDoc(doc(db,'dmThreads', key), { key, a, b, ts: serverTimestamp() }, { merge: true });
+  return key;
+}
 
-  el('hc-new-btn').addEventListener('click', openNewOverlay);
-  el('hc-cancel-new').addEventListener('click', closeNewOverlay);
-  el('hc-tab-channel').addEventListener('click', () => switchTab('channel'));
-  el('hc-tab-dm').addEventListener('click', () => { switchTab('dm'); renderMemberList(); });
-  el('hc-create-channel').addEventListener('click', async () => {
-    const name = el('hc-channel-input').value.trim();
-    if (!name){ el('hc-channel-note').textContent = 'Please enter a channel name.'; return; }
-    const id = await createChannel(name);
-    el('hc-channel-input').value = '';
-    closeNewOverlay();
-    renderListScreen();
-    const c = channels.find(c => c.id === id);
-    if (c) openChat('channel', c.id, c.name);
+// ---------- messages ----------
+function listenMessages(chatKey, cb){
+  const q = query(collection(db,'messages'), where('chatKey','==', chatKey), orderBy('ts','asc'));
+  return onSnapshot(q, (snap) => {
+    const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    cb(list);
+  });
+}
+async function sendMessageToFirestore(chatKey, text){
+  await addDoc(collection(db,'messages'), { chatKey, name: myName, text, ts: serverTimestamp() });
+}
+async function deleteMessageDoc(id){ await deleteDoc(doc(db,'messages', id)); }
+async function reportMessageDoc(chatKey, msg){
+  await addDoc(collection(db,'reports'), {
+    chatKey, msgId: msg.id, text: msg.text, author: msg.name, reportedBy: myName, ts: serverTimestamp()
+  });
+}
+
+// ---------- rendering: list screen ----------
+function renderListScreen(){
+  el('hc-title').textContent = 'Halal Chat';
+  el('hc-subtitle').textContent = myName ? ('Signed in as ' + myName) : '';
+  el('hc-back').style.display = 'none';
+
+  const chList = el('hc-channel-list');
+  chList.innerHTML = '';
+  channels.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'hc-list-item';
+    item.innerHTML = `
+      <div class="hc-list-avatar" style="background:${colorFor(c.id)}">#</div>
+      <div class="hc-list-body">
+        <p class="hc-list-name">${escapeHtml(c.name)}</p>
+        <p class="hc-list-sub">Community channel</p>
+      </div>`;
+    item.addEventListener('click', () => openChat('channel', 'ch:'+c.id, c.name));
+    chList.appendChild(item);
   });
 
-  init();
-})();
+  const dmList = el('hc-dm-list');
+  dmList.innerHTML = '';
+  dmThreads.forEach(t => {
+    const other = t.a === myName ? t.b : t.a;
+    const item = document.createElement('div');
+    item.className = 'hc-list-item';
+    item.innerHTML = `
+      <div class="hc-list-avatar" style="background:${colorFor(other)}">${initials(other)}</div>
+      <div class="hc-list-body">
+        <p class="hc-list-name">${escapeHtml(other)}</p>
+        <p class="hc-list-sub">Direct message</p>
+      </div>`;
+    item.addEventListener('click', () => openChat('dm', t.key, other));
+    dmList.appendChild(item);
+  });
+
+  el('hc-empty-list').style.display = dmThreads.length === 0 ? 'block' : 'none';
+}
+
+// ---------- rendering: chat screen ----------
+function renderMessages(list){
+  const messagesEl = el('hc-messages');
+  if (list.length === 0){
+    messagesEl.innerHTML = '<div id="hc-empty">No messages yet. Be the first to say salam 👋</div>';
+    return;
+  }
+  const shouldStick = messagesEl.scrollTop + messagesEl.clientHeight >= messagesEl.scrollHeight - 40;
+  messagesEl.innerHTML = '';
+  list.forEach(m => {
+    const mine = m.name === myName;
+    const row = document.createElement('div');
+    row.className = 'hc-row ' + (mine ? 'mine' : 'theirs');
+
+    const avatar = document.createElement('div');
+    avatar.className = 'hc-avatar';
+    avatar.style.background = colorFor(m.name);
+    avatar.textContent = initials(m.name);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'hc-bubble-wrap';
+
+    if (!mine){
+      const nameEl = document.createElement('p');
+      nameEl.className = 'hc-name';
+      nameEl.textContent = m.name;
+      wrap.appendChild(nameEl);
+    }
+
+    const bubble = document.createElement('div');
+    bubble.className = 'hc-bubble';
+    bubble.textContent = m.text;
+    bubble.addEventListener('click', () => {
+      if (expandedIds.has(m.id)) expandedIds.delete(m.id); else expandedIds.add(m.id);
+      renderMessages(list);
+    });
+    wrap.appendChild(bubble);
+
+    const metaRow = document.createElement('div');
+    metaRow.className = 'hc-meta-row';
+    const time = document.createElement('span');
+    time.className = 'hc-time';
+    time.textContent = fmtTime(m.ts);
+    metaRow.appendChild(time);
+    wrap.appendChild(metaRow);
+
+    if (expandedIds.has(m.id)){
+      const actions = document.createElement('div');
+      actions.className = 'hc-actions';
+      if (mine){
+        const del = document.createElement('button');
+        del.className = 'hc-action-link delete';
+        del.textContent = 'Delete';
+        del.addEventListener('click', async (e) => { e.stopPropagation(); await deleteMessageDoc(m.id); expandedIds.delete(m.id); });
+        actions.appendChild(del);
+      } else {
+        const rep = document.createElement('button');
+        rep.className = 'hc-action-link report';
+        rep.textContent = 'Report';
+        rep.addEventListener('click', async (e) => { e.stopPropagation(); await reportMessageDoc(currentChat.id, m); expandedIds.delete(m.id); flashSubtitle('Message reported — thank you'); renderMessages(list); });
+        actions.appendChild(rep);
+      }
+      wrap.appendChild(actions);
+    }
+
+    row.appendChild(avatar);
+    row.appendChild(wrap);
+    messagesEl.appendChild(row);
+  });
+  if (shouldStick) messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function flashSubtitle(text){
+  const original = currentChat ? currentChat.title : '';
+  el('hc-subtitle').textContent = text;
+  setTimeout(() => { if (currentChat) el('hc-subtitle').textContent = currentChat.title; }, 2000);
+}
+
+// ---------- navigation ----------
+function openChat(type, chatKey, title){
+  currentChat = { type, id: chatKey, title };
+  expandedIds = new Set();
+  el('hc-list-screen').style.display = 'none';
+  el('hc-chat-screen').style.display = 'flex';
+  el('hc-back').style.display = 'flex';
+  el('hc-title').textContent = title;
+  el('hc-subtitle').textContent = type === 'channel' ? 'Community channel' : 'Direct message';
+  if (unsubMessages) unsubMessages();
+  unsubMessages = listenMessages(chatKey, renderMessages);
+}
+
+function goToList(){
+  currentChat = null;
+  if (unsubMessages) { unsubMessages(); unsubMessages = null; }
+  el('hc-chat-screen').style.display = 'none';
+  el('hc-list-screen').style.display = 'block';
+  renderListScreen();
+}
+
+async function sendMessage(){
+  const input = el('hc-input');
+  const text = input.value.trim();
+  if (!text || !myName || !currentChat) return;
+  el('hc-send').disabled = true;
+  input.value = '';
+  await sendMessageToFirestore(currentChat.id, text);
+  el('hc-send').disabled = false;
+  input.focus();
+}
+
+// ---------- new channel / DM overlay ----------
+function openNewOverlay(){ el('hc-new-overlay').classList.add('show'); switchTab('channel'); renderMemberList(); }
+function closeNewOverlay(){ el('hc-new-overlay').classList.remove('show'); }
+function switchTab(tab){
+  el('hc-tab-channel').classList.toggle('active', tab === 'channel');
+  el('hc-tab-dm').classList.toggle('active', tab === 'dm');
+  el('hc-panel-channel').style.display = tab === 'channel' ? 'block' : 'none';
+  el('hc-panel-dm').style.display = tab === 'dm' ? 'block' : 'none';
+}
+async function renderMemberList(){
+  const all = await loadAllUsers();
+  const others = all.filter(u => u.name !== myName);
+  const listEl = el('hc-member-list');
+  listEl.innerHTML = '';
+  others.forEach(u => {
+    const item = document.createElement('div');
+    item.className = 'hc-member-item';
+    item.innerHTML = `<div class="hc-list-avatar" style="width:32px;height:32px;font-size:12px;background:${colorFor(u.name)}">${initials(u.name)}</div><span>${escapeHtml(u.name)}</span>`;
+    item.addEventListener('click', async () => {
+      const key = await ensureDmPair(myName, u.name);
+      closeNewOverlay();
+      openChat('dm', key, u.name);
+    });
+    listEl.appendChild(item);
+  });
+  el('hc-member-empty').style.display = others.length === 0 ? 'block' : 'none';
+}
+
+// ---------- init / join ----------
+function getUsername(){ return localStorage.getItem('hc-username'); }
+function setUsername(name){ localStorage.setItem('hc-username', name); }
+
+async function bootAfterJoin(){
+  el('hc-join-overlay').classList.remove('show');
+  await addUserIfMissing(myName);
+  await ensureDefaultChannels();
+  if (unsubChannels) unsubChannels();
+  unsubChannels = listenChannels(renderListScreen);
+  listenDmThreads(renderListScreen);
+  goToList();
+}
+
+async function init(){
+  myName = getUsername();
+  if (myName) await bootAfterJoin();
+}
+
+el('hc-join').addEventListener('click', async () => {
+  const name = el('hc-name-input').value.trim();
+  if (!name){ el('hc-join-note').textContent = 'Please enter a name to continue.'; return; }
+  myName = name;
+  setUsername(name);
+  await bootAfterJoin();
+});
+el('hc-name-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') el('hc-join').click(); });
+
+el('hc-back').addEventListener('click', goToList);
+el('hc-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+el('hc-send').addEventListener('click', sendMessage);
+
+el('hc-new-btn').addEventListener('click', openNewOverlay);
+el('hc-cancel-new').addEventListener('click', closeNewOverlay);
+el('hc-tab-channel').addEventListener('click', () => switchTab('channel'));
+el('hc-tab-dm').addEventListener('click', () => { switchTab('dm'); renderMemberList(); });
+el('hc-create-channel').addEventListener('click', async () => {
+  const name = el('hc-channel-input').value.trim();
+  if (!name){ el('hc-channel-note').textContent = 'Please enter a channel name.'; return; }
+  const id = await createChannel(name);
+  el('hc-channel-input').value = '';
+  closeNewOverlay();
+  openChat('channel', 'ch:'+id, name);
+});
+
+init();
 </script>
+</body>
+</html>
