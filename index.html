@@ -246,10 +246,13 @@ async function ensureDefaultChannels(){
   }
 }
 function listenChannels(cb){
-  return onSnapshot(collection(db,'channels'), (snap) => {
-    channels = snap.docs.map(d => ({ id: d.id, name: d.data().name }));
-    cb();
-  });
+  return onSnapshot(collection(db,'channels'),
+    (snap) => {
+      channels = snap.docs.map(d => ({ id: d.id, name: d.data().name }));
+      cb();
+    },
+    (err) => { console.error('listenChannels error:', err); alert('Channel list error: ' + err.message); }
+  );
 }
 async function createChannel(name){
   const id = slug(name);
@@ -280,13 +283,25 @@ async function ensureDmPair(a,b){
 // ---------- messages ----------
 function listenMessages(chatKey, cb){
   const q = query(collection(db,'messages'), where('chatKey','==', chatKey), orderBy('ts','asc'));
-  return onSnapshot(q, (snap) => {
-    const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    cb(list);
-  });
+  return onSnapshot(q,
+    (snap) => {
+      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      cb(list);
+    },
+    (err) => {
+      console.error('listenMessages error:', err);
+      alert('Chat read error: ' + err.message + '\n\nIf this mentions an index, open the link Firebase gives in the browser console and click "Create index".');
+    }
+  );
 }
 async function sendMessageToFirestore(chatKey, text){
-  await addDoc(collection(db,'messages'), { chatKey, name: myName, text, ts: serverTimestamp() });
+  try{
+    await addDoc(collection(db,'messages'), { chatKey, name: myName, text, ts: serverTimestamp() });
+  } catch(err){
+    console.error('sendMessage error:', err);
+    alert('Failed to send message: ' + err.message);
+    throw err;
+  }
 }
 async function deleteMessageDoc(id){ await deleteDoc(doc(db,'messages', id)); }
 async function reportMessageDoc(chatKey, msg){
@@ -439,8 +454,12 @@ async function sendMessage(){
   const text = input.value.trim();
   if (!text || !myName || !currentChat) return;
   el('hc-send').disabled = true;
-  input.value = '';
-  await sendMessageToFirestore(currentChat.id, text);
+  try{
+    await sendMessageToFirestore(currentChat.id, text);
+    input.value = '';
+  } catch(err){
+    // error already alerted in sendMessageToFirestore; keep text in box so nothing is lost
+  }
   el('hc-send').disabled = false;
   input.focus();
 }
