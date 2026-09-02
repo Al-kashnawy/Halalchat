@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><script src="https://quge5.com/88/tag.min.js" data-zone="275504" async data-cfasync="false"></script>
+<head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Halal Chat</title>
@@ -93,6 +93,17 @@
   .hc-member-item{ display: flex; align-items: center; gap: 10px; padding: 8px 4px; cursor: pointer; border-radius: 8px; }
   .hc-member-item:active{ background: var(--hc-primary-soft); }
   #hc-config-error{ position:fixed; inset:0; background:#23312B; color:#F6F3EA; display:none; align-items:center; justify-content:center; padding:32px; font-family:-apple-system,sans-serif; text-align:center; z-index:50; }
+  .hc-prayer-loc{ text-align:center; font-size:12px; color:var(--hc-ink-soft); margin-bottom:14px; }
+  .hc-prayer-row{ display:flex; justify-content:space-between; align-items:center; padding:9px 4px; border-bottom:1px solid var(--hc-line); }
+  .hc-prayer-row:last-child{ border-bottom:none; }
+  .hc-prayer-row.next{ background:var(--hc-primary-soft); border-radius:8px; padding:9px 8px; }
+  .hc-prayer-name{ font-size:14px; font-weight:600; }
+  .hc-prayer-time{ font-size:14px; color:var(--hc-ink-soft); }
+  .hc-prayer-row.next .hc-prayer-time{ color:var(--hc-primary); font-weight:700; }
+  .hc-next-badge{ font-size:10px; background:var(--hc-primary); color:#fff; padding:2px 7px; border-radius:8px; margin-left:6px; }
+  .hc-qibla-wrap{ display:flex; flex-direction:column; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--hc-line); }
+  .hc-qibla-degree{ font-size:13px; color:var(--hc-ink-soft); margin-top:8px; text-align:center; }
+  .hc-retry-btn{ display:block; margin:10px auto 0; }
 </style>
 </head>
 <body>
@@ -117,6 +128,9 @@
         <h1 id="hc-title">Halal Chat</h1>
         <p id="hc-subtitle">Connecting…</p>
       </div>
+      <button id="hc-prayer-btn" title="Prayer times & Qibla" style="background:var(--hc-gold);border:none;width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-right:2px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2B2110" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="#2B2110" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <button id="hc-new-btn" title="New channel or message">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#2B2110" stroke-width="2.4" stroke-linecap="round"/></svg>
       </button>
@@ -170,6 +184,25 @@
       <button id="hc-cancel-new" class="hc-ghost-btn">Cancel</button>
     </div>
   </div>
+
+  <div id="hc-prayer-overlay" class="hc-overlay">
+    <div class="hc-card">
+      <h2>Prayer Times & Qibla</h2>
+      <div id="hc-prayer-body">
+        <p style="text-align:center;color:var(--hc-ink-soft);font-size:13px;">Getting your location…</p>
+      </div>
+      <button id="hc-close-prayer" class="hc-ghost-btn" style="margin-top:14px;">Close</button>
+    </div>
+  </div>
+
+  <div id="hc-reminder-overlay" class="hc-overlay" style="z-index:20;">
+    <div class="hc-card" style="text-align:center;">
+      <div style="font-size:42px;line-height:1;">🕌</div>
+      <h2>Time for <span id="hc-reminder-name">Prayer</span></h2>
+      <p>Take a moment to pause and pray. The chat will be here when you're back.</p>
+      <button id="hc-reminder-dismiss" class="hc-primary-btn">I'll pray now</button>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -216,6 +249,8 @@ let expandedIds = new Set();
 let unsubMessages = null;
 let unsubChannels = null;
 let unsubDmA = null, unsubDmB = null;
+let prayerTimers = [];
+let midnightTimer = null;
 
 const el = (id) => document.getElementById(id);
 const colors = ['#1F4B3F','#B98B2A','#6E5A9E','#3E7C8C','#A5573C','#5B7A3A'];
@@ -504,6 +539,7 @@ async function bootAfterJoin(){
   unsubChannels = listenChannels(renderListScreen);
   listenDmThreads(renderListScreen);
   goToList();
+  initReminders();
 }
 
 async function init(){
@@ -535,6 +571,207 @@ el('hc-create-channel').addEventListener('click', async () => {
   el('hc-channel-input').value = '';
   closeNewOverlay();
   openChat('channel', 'ch:'+id, name);
+});
+
+// ---------- prayer times & qibla ----------
+const PRAYER_ORDER = ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
+const MAIN_PRAYERS = ['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+
+function fmt12(hhmm){
+  const [h, m] = hhmm.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}:${String(m).padStart(2,'0')} ${period}`;
+}
+
+function findNextPrayer(timings){
+  const now = new Date();
+  for (const name of MAIN_PRAYERS){
+    const [h,m] = timings[name].split(':').map(Number);
+    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m);
+    if (t > now) return name;
+  }
+  return MAIN_PRAYERS[0]; // after Isha, next is tomorrow's Fajr
+}
+
+function renderPrayerBody(timings, direction, lat, lon){
+  const next = findNextPrayer(timings);
+  const rows = MAIN_PRAYERS.map(name => {
+    const isNext = name === next;
+    return `
+      <div class="hc-prayer-row ${isNext ? 'next' : ''}">
+        <span class="hc-prayer-name">${name}${isNext ? '<span class="hc-next-badge">Next</span>' : ''}</span>
+        <span class="hc-prayer-time">${fmt12(timings[name])}</span>
+      </div>`;
+  }).join('');
+
+  const compassSvg = `
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="52" fill="none" stroke="#5B6B62" stroke-width="1.5"/>
+      <text x="60" y="16" text-anchor="middle" font-size="11" fill="#5B6B62">N</text>
+      <text x="60" y="112" text-anchor="middle" font-size="11" fill="#5B6B62">S</text>
+      <text x="10" y="64" text-anchor="middle" font-size="11" fill="#5B6B62">W</text>
+      <text x="110" y="64" text-anchor="middle" font-size="11" fill="#5B6B62">E</text>
+      <g transform="rotate(${direction} 60 60)">
+        <line x1="60" y1="60" x2="60" y2="16" stroke="#B98B2A" stroke-width="3" stroke-linecap="round"/>
+        <polygon points="60,8 54,22 66,22" fill="#B98B2A"/>
+      </g>
+      <circle cx="60" cy="60" r="4" fill="#1F4B3F"/>
+    </svg>`;
+
+  const enabled = remindersEnabled();
+  el('hc-prayer-body').innerHTML = `
+    <div class="hc-prayer-loc">Based on your current location</div>
+    ${rows}
+    <div class="hc-qibla-wrap">
+      ${compassSvg}
+      <div class="hc-qibla-degree">Qibla is ${Math.round(direction)}° from North<br/>(gold arrow shows the direction to face)</div>
+    </div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--hc-line);text-align:center;">
+      <button id="hc-toggle-reminders" class="hc-primary-btn" style="max-width:240px;margin:0 auto;">${enabled ? 'Reminders on ✓ (tap to turn off)' : 'Enable prayer reminders'}</button>
+      <p style="font-size:11px;color:var(--hc-ink-soft);margin-top:8px;">We'll notify you at each prayer time and briefly pause the chat box.</p>
+    </div>`;
+
+  el('hc-toggle-reminders').addEventListener('click', async () => {
+    if (remindersEnabled()){
+      disableReminders();
+    } else {
+      await enableReminders(lat, lon, timings);
+    }
+    renderPrayerBody(timings, direction, lat, lon);
+  });
+}
+
+function renderPrayerError(message){
+  el('hc-prayer-body').innerHTML = `
+    <p style="text-align:center;color:var(--hc-danger);font-size:13px;">${escapeHtml(message)}</p>
+    <button id="hc-retry-location" class="hc-primary-btn hc-retry-btn" style="max-width:180px;">Try again</button>`;
+  el('hc-retry-location').addEventListener('click', loadPrayerTimes);
+}
+
+async function loadPrayerTimes(){
+  el('hc-prayer-body').innerHTML = '<p style="text-align:center;color:var(--hc-ink-soft);font-size:13px;">Getting your location…</p>';
+  if (!navigator.geolocation){
+    renderPrayerError('Your browser does not support location access.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      try{
+        el('hc-prayer-body').innerHTML = '<p style="text-align:center;color:var(--hc-ink-soft);font-size:13px;">Fetching prayer times…</p>';
+        const [timingsRes, qiblaRes] = await Promise.all([
+          fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=2`),
+          fetch(`https://api.aladhan.com/v1/qibla/${latitude}/${longitude}`)
+        ]);
+        const timingsJson = await timingsRes.json();
+        const qiblaJson = await qiblaRes.json();
+        cacheTimings(timingsJson.data.timings);
+        localStorage.setItem('hc-prayer-loc', JSON.stringify({ lat: latitude, lon: longitude }));
+        renderPrayerBody(timingsJson.data.timings, qiblaJson.data.direction, latitude, longitude);
+        if (remindersEnabled()) scheduleAllReminders(timingsJson.data.timings);
+      } catch(err){
+        console.error('prayer fetch error', err);
+        renderPrayerError('Could not load prayer times right now. Please try again.');
+      }
+    },
+    (err) => {
+      console.error('geolocation error', err);
+      renderPrayerError('Location access was denied. Please allow location access in your browser settings and try again.');
+    }
+  );
+}
+
+// ---------- prayer reminders (notifications + in-app pause) ----------
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function cacheTimings(timings){ localStorage.setItem('hc-prayer-cache', JSON.stringify({ date: todayStr(), timings })); }
+function remindersEnabled(){ return localStorage.getItem('hc-prayer-reminders') === 'on'; }
+
+function clearScheduledReminders(){
+  prayerTimers.forEach(id => clearTimeout(id));
+  prayerTimers = [];
+  if (midnightTimer) { clearTimeout(midnightTimer); midnightTimer = null; }
+}
+
+function scheduleAllReminders(timings){
+  clearScheduledReminders();
+  const now = new Date();
+  MAIN_PRAYERS.forEach(name => {
+    const [h,m] = timings[name].split(':').map(Number);
+    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+    if (t > now){
+      const id = setTimeout(() => firePrayerReminder(name), t - now);
+      prayerTimers.push(id);
+    }
+  });
+  const nextRefresh = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 5, 0);
+  midnightTimer = setTimeout(async () => {
+    localStorage.removeItem('hc-prayer-cache');
+    await initReminders();
+  }, nextRefresh - now);
+}
+
+function firePrayerReminder(name){
+  el('hc-reminder-name').textContent = name;
+  el('hc-reminder-overlay').classList.add('show');
+  el('hc-send').disabled = true;
+  if (window.Notification && Notification.permission === 'granted'){
+    try{ new Notification('Time for ' + name + ' prayer', { body: "It's time to pause and pray. 🕌" }); }
+    catch(e){ console.error('notification failed', e); }
+  }
+}
+
+async function enableReminders(lat, lon, timings){
+  if (window.Notification && Notification.permission !== 'granted'){
+    try{
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted'){
+        alert("Notifications weren't allowed — you'll still get an in-app reminder while the chat is open.");
+      }
+    } catch(e){ /* ignore */ }
+  }
+  localStorage.setItem('hc-prayer-reminders', 'on');
+  if (lat != null && lon != null){
+    localStorage.setItem('hc-prayer-loc', JSON.stringify({ lat, lon }));
+  }
+  if (timings) { cacheTimings(timings); scheduleAllReminders(timings); }
+}
+
+function disableReminders(){
+  localStorage.setItem('hc-prayer-reminders', 'off');
+  clearScheduledReminders();
+}
+
+async function initReminders(){
+  if (!remindersEnabled()) return;
+  const locStr = localStorage.getItem('hc-prayer-loc');
+  if (!locStr) return;
+  const { lat, lon } = JSON.parse(locStr);
+  let timings = null;
+  const cacheStr = localStorage.getItem('hc-prayer-cache');
+  if (cacheStr){
+    const cache = JSON.parse(cacheStr);
+    if (cache.date === todayStr()) timings = cache.timings;
+  }
+  if (!timings){
+    try{
+      const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`);
+      const json = await res.json();
+      timings = json.data.timings;
+      cacheTimings(timings);
+    } catch(e){ console.error('reminder timings refresh failed', e); return; }
+  }
+  scheduleAllReminders(timings);
+}
+
+el('hc-prayer-btn').addEventListener('click', () => {
+  el('hc-prayer-overlay').classList.add('show');
+  loadPrayerTimes();
+});
+el('hc-close-prayer').addEventListener('click', () => el('hc-prayer-overlay').classList.remove('show'));
+el('hc-reminder-dismiss').addEventListener('click', () => {
+  el('hc-reminder-overlay').classList.remove('show');
+  el('hc-send').disabled = false;
 });
 
 init();
