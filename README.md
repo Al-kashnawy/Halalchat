@@ -41,3 +41,9 @@ Keep `index.html` at the repository root. Vercel can serve the static site direc
 
 ## Important
 The frontend Firebase configuration is not a server secret. Security comes from Authentication, Firestore Security Rules, App Check and server-side controls. Do not commit Firebase service-account JSON files, private keys, payment secrets or API secrets.
+
+
+## Account onboarding
+The site now includes a polished Sign in / Create account flow with email/password, Google sign-in, password reset, and profile onboarding. New email accounts are asked for a display name and optional bio, location, and interests. Email verification is requested after email/password registration.
+
+In Firebase Console, enable **Anonymous**, **Email/Password**, and optionally **Google** under Authentication → Sign-in method. Configure the authorized domain for your deployed Vercel site if Firebase asks for it.
