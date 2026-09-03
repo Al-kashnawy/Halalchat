@@ -1,221 +1,92 @@
 <!doctype html>
 <html lang="en">
-<head><script>(function(s){s.dataset.zone='11707680',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Halal Chat</title>
+<meta name="theme-color" content="#173b32" />
+<title>Halal Chat — Connect. Learn. Belong.</title>
 <style>
-  :root{
-    --hc-bg: #F6F3EA;
-    --hc-panel: #FFFFFF;
-    --hc-ink: #23312B;
-    --hc-ink-soft: #5B6B62;
-    --hc-primary: #1F4B3F;
-    --hc-primary-soft: #DCEAE3;
-    --hc-gold: #B98B2A;
-    --hc-line: #E4DFD0;
-    --hc-danger: #A5573C;
-  }
-  html,body{ margin:0; background:#DDD8C8; }
-  #hc-wrap{ position: relative; }
-  #hc-root{
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--hc-bg);
-    color: var(--hc-ink);
-    max-width: 480px;
-    margin: 0 auto;
-    height: 100vh;
-    max-height: 800px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  @media (min-width: 481px){
-    #hc-root{ height: 720px; border-radius: 18px; border: 1px solid var(--hc-line); margin-top: 24px; }
-  }
-  #hc-header{
-    background: var(--hc-primary); color: #F6F3EA; padding: 14px 16px;
-    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-  }
-  .hc-icon-btn{
-    background: none; border: none; color: #F6F3EA; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    width: 30px; height: 30px; flex-shrink: 0; padding: 0;
-  }
-  #hc-mark{ width: 32px; height: 32px; border-radius: 50%; background: var(--hc-gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  #hc-header-text{ flex: 1; min-width: 0; }
-  #hc-header h1{ font-family: Georgia, "Times New Roman", serif; font-size: 18px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #hc-header p{ margin: 2px 0 0; font-size: 11.5px; color: #CFE0D8; }
-  #hc-new-btn{ background: var(--hc-gold); border: none; color: #2B2110; width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  #hc-list-screen{ flex: 1; overflow-y: auto; background: var(--hc-bg); }
-  .hc-section-title{ font-size: 12px; color: var(--hc-ink-soft); font-weight: 600; padding: 14px 16px 6px; }
-  .hc-list-item{ display: flex; align-items: center; gap: 12px; padding: 10px 16px; cursor: pointer; background: var(--hc-bg); }
-  .hc-list-item:active{ background: var(--hc-primary-soft); }
-  .hc-list-avatar{ width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #fff; }
-  .hc-list-body{ flex: 1; min-width: 0; }
-  .hc-list-name{ font-size: 14.5px; font-weight: 600; margin: 0; }
-  .hc-list-sub{ font-size: 12.5px; color: var(--hc-ink-soft); margin: 2px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #hc-empty-list{ text-align: center; color: var(--hc-ink-soft); font-size: 13px; padding: 40px 24px; }
-  #hc-chat-screen{ flex: 1; display: none; flex-direction: column; min-height: 0; }
-  #hc-messages{ flex: 1; overflow-y: auto; padding: 16px 12px; display: flex; flex-direction: column; gap: 10px; background: var(--hc-bg); }
-  .hc-row{ display: flex; gap: 8px; align-items: flex-end; }
-  .hc-row.mine{ flex-direction: row-reverse; }
-  .hc-avatar{ width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; }
-  .hc-bubble-wrap{ max-width: 75%; display: flex; flex-direction: column; }
-  .hc-name{ font-size: 11px; color: var(--hc-ink-soft); margin: 0 0 3px 2px; }
-  .hc-row.mine .hc-name{ text-align: right; margin: 0 2px 3px 0; }
-  .hc-bubble{ padding: 9px 13px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.06); cursor: pointer; }
-  .hc-row.theirs .hc-bubble{ background: #fff; color: var(--hc-ink); border-bottom-left-radius: 4px; }
-  .hc-row.mine .hc-bubble{ background: var(--hc-primary); color: var(--hc-bg); border-bottom-right-radius: 4px; }
-  .hc-meta-row{ display: flex; gap: 8px; align-items: center; margin-top: 3px; }
-  .hc-row.mine .hc-meta-row{ justify-content: flex-end; }
-  .hc-time{ font-size: 10px; color: var(--hc-ink-soft); }
-  .hc-actions{ display: flex; gap: 10px; margin-top: 4px; }
-  .hc-action-link{ font-size: 11px; border: none; background: none; cursor: pointer; padding: 0; text-decoration: underline; }
-  .hc-action-link.delete{ color: var(--hc-danger); }
-  .hc-action-link.report{ color: var(--hc-ink-soft); }
-  #hc-inputbar{ display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--hc-line); background: var(--hc-panel); flex-shrink: 0; }
-  #hc-input{ flex: 1; border: 1px solid var(--hc-line); border-radius: 20px; padding: 10px 15px; font-size: 14.5px; outline: none; background: var(--hc-bg); color: var(--hc-ink); }
-  #hc-input:focus{ border-color: var(--hc-primary); }
-  #hc-send{ border: none; background: var(--hc-primary); color: #fff; width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  #hc-send:disabled{ opacity: 0.5; cursor: default; }
-  .hc-overlay{ position: absolute; inset: 0; background: rgba(35,49,43,0.55); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 5; }
-  .hc-overlay.show{ display: flex; }
-  .hc-card{ background: var(--hc-panel); border-radius: 16px; padding: 22px; max-width: 320px; width: 100%; text-align: left; max-height: 520px; overflow-y: auto; }
-  .hc-card h2{ font-family: Georgia, serif; color: var(--hc-primary); margin: 0 0 6px; text-align: center; }
-  .hc-card p{ font-size: 13px; color: var(--hc-ink-soft); margin: 0 0 16px; text-align: center; }
-  .hc-text-input{ width: 100%; box-sizing: border-box; padding: 10px 13px; border-radius: 10px; border: 1px solid var(--hc-line); font-size: 14.5px; margin-bottom: 12px; }
-  .hc-primary-btn{ width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--hc-primary); color: #fff; font-size: 14.5px; cursor: pointer; margin-bottom: 8px; }
-  .hc-ghost-btn{ width: 100%; padding: 10px; border: 1px solid var(--hc-line); border-radius: 10px; background: none; color: var(--hc-ink-soft); font-size: 13.5px; cursor: pointer; }
-  .hc-tab-row{ display: flex; gap: 8px; margin-bottom: 14px; }
-  .hc-tab{ flex: 1; padding: 8px; text-align: center; border-radius: 8px; font-size: 13px; background: var(--hc-bg); color: var(--hc-ink-soft); cursor: pointer; }
-  .hc-tab.active{ background: var(--hc-primary); color: #fff; }
-  .hc-member-item{ display: flex; align-items: center; gap: 10px; padding: 8px 4px; cursor: pointer; border-radius: 8px; }
-  .hc-member-item:active{ background: var(--hc-primary-soft); }
-  #hc-config-error{ position:fixed; inset:0; background:#23312B; color:#F6F3EA; display:none; align-items:center; justify-content:center; padding:32px; font-family:-apple-system,sans-serif; text-align:center; z-index:50; }
-  .hc-prayer-loc{ text-align:center; font-size:12px; color:var(--hc-ink-soft); margin-bottom:14px; }
-  .hc-prayer-row{ display:flex; justify-content:space-between; align-items:center; padding:9px 4px; border-bottom:1px solid var(--hc-line); }
-  .hc-prayer-row:last-child{ border-bottom:none; }
-  .hc-prayer-row.next{ background:var(--hc-primary-soft); border-radius:8px; padding:9px 8px; }
-  .hc-prayer-name{ font-size:14px; font-weight:600; }
-  .hc-prayer-time{ font-size:14px; color:var(--hc-ink-soft); }
-  .hc-prayer-row.next .hc-prayer-time{ color:var(--hc-primary); font-weight:700; }
-  .hc-next-badge{ font-size:10px; background:var(--hc-primary); color:#fff; padding:2px 7px; border-radius:8px; margin-left:6px; }
-  .hc-qibla-wrap{ display:flex; flex-direction:column; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--hc-line); }
-  .hc-qibla-degree{ font-size:13px; color:var(--hc-ink-soft); margin-top:8px; text-align:center; }
-  .hc-retry-btn{ display:block; margin:10px auto 0; }
+:root{
+  --bg:#f5f2e9; --panel:#fffdf8; --ink:#20332c; --muted:#66756d;
+  --primary:#173b32; --primary2:#24584a; --soft:#dfece6; --gold:#b68b2c;
+  --line:#e3ded1; --danger:#a84f3c; --shadow:0 12px 35px rgba(30,50,42,.08);
+}
+*{box-sizing:border-box} html,body{margin:0;background:#dcd7c9;color:var(--ink)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+#app{max-width:1100px;min-height:100vh;margin:auto;background:var(--bg);display:flex;flex-direction:column}
+@media(min-width:900px){#app{margin:20px auto;min-height:calc(100vh - 40px);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}}
+header{height:70px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:38px;height:38px;border-radius:12px;background:#e7d49b;color:var(--primary);display:grid;place-items:center;font-weight:900}.brand h1{font-size:18px;margin:0}.brand small{opacity:.75}
+.header-actions{display:flex;gap:8px}.icon-btn,.pill-btn{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:10px;padding:9px 11px}.pill-btn{background:#e7d49b;color:var(--primary);font-weight:800}
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 110px)}
+aside{border-right:1px solid var(--line);padding:18px;background:#f8f5ed}
+main{min-width:0;display:flex;flex-direction:column}
+@media(max-width:760px){.layout{grid-template-columns:1fr}aside{display:none}.mobile-nav{display:flex!important}}
+.mobile-nav{display:none;gap:8px;padding:9px;border-bottom:1px solid var(--line);overflow:auto}.mobile-nav button{white-space:nowrap}
+.nav-title{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:12px 0 8px}
+.nav-btn{width:100%;text-align:left;border:0;background:transparent;padding:11px;border-radius:12px;color:var(--ink);font-weight:700}.nav-btn:hover,.nav-btn.active{background:var(--soft)}
+.community-list{display:flex;flex-direction:column;gap:6px}.community-item{display:flex;gap:10px;align-items:center;border:0;background:transparent;text-align:left;padding:9px;border-radius:12px;width:100%}.community-item:hover,.community-item.active{background:#e9efe9}.avatar{width:34px;height:34px;border-radius:11px;background:var(--soft);display:grid;place-items:center;font-weight:900;flex:0 0 auto}.community-item .meta{min-width:0}.community-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.community-item span{font-size:12px;color:var(--muted)}
+.content{padding:24px;overflow:auto;flex:1}.hero{background:linear-gradient(135deg,#173b32,#2c6655);color:#fff;border-radius:20px;padding:25px;display:flex;justify-content:space-between;gap:18px;align-items:flex-end}.hero h2{font-size:30px;line-height:1.05;margin:0 0 8px}.hero p{margin:0;max-width:620px;opacity:.85}.hero .hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:11px;padding:10px 14px;font-weight:750}.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn.gold{background:#e7d49b;border-color:#e7d49b;color:#173b32}.btn.danger{color:var(--danger);border-color:#e9cfc8}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 5px 18px rgba(30,50,42,.04)}.card h3{margin:0 0 7px;font-size:16px}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}.content{padding:15px}.hero{padding:20px;display:block}.hero .hero-actions{margin-top:16px}}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 12px}.section-head h2{margin:0;font-size:20px}
+.community-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.community-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.community-card-top{display:flex;gap:11px;align-items:center}.community-card p{font-size:13px;color:var(--muted);min-height:38px}.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:11px;background:var(--soft);border-radius:999px;padding:5px 8px;color:var(--primary)}
+@media(max-width:600px){.community-cards{grid-template-columns:1fr}}
+.chat-shell{height:100%;display:flex;flex-direction:column}.chat-head{padding:16px 20px;border-bottom:1px solid var(--line);background:var(--panel);display:flex;justify-content:space-between;align-items:center;gap:12px}.chat-head h2{margin:0;font-size:18px}.chat-head p{margin:3px 0 0;color:var(--muted);font-size:12px}.messages{flex:1;overflow:auto;padding:20px;background:#f8f5ed}.msg{max-width:760px;background:var(--panel);border:1px solid var(--line);padding:10px 12px;border-radius:14px;margin-bottom:10px}.msg.me{margin-left:auto;background:#e5efe9}.msg-top{font-size:12px;font-weight:800;margin-bottom:4px}.msg-top span{font-weight:400;color:var(--muted);margin-left:6px}.msg-text{white-space:pre-wrap;word-break:break-word}.msg-actions{display:flex;gap:8px;margin-top:6px}.tiny{border:0;background:transparent;color:var(--muted);font-size:11px;padding:0}.composer{display:flex;gap:8px;padding:12px;background:var(--panel);border-top:1px solid var(--line)}.composer textarea{flex:1;resize:none;min-height:44px;max-height:120px;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff}.empty{padding:45px 15px;text-align:center;color:var(--muted)}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.tool{border:1px solid var(--line);background:var(--panel);border-radius:15px;padding:15px;text-align:left}.tool b{display:block;margin:7px 0 4px}.tool span{font-size:12px;color:var(--muted)}
+@media(max-width:700px){.tools{grid-template-columns:1fr 1fr}}
+.list{display:flex;flex-direction:column;gap:9px}.list-row{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.notice{padding:12px 14px;border-radius:12px;background:#fff7df;border:1px solid #ead8a5;color:#6e571c;font-size:13px;margin-bottom:14px}.error{background:#fff0ed;border-color:#e7c3bb;color:#7d3325}
+.overlay{position:fixed;inset:0;background:rgba(16,28,24,.5);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.overlay.show{display:flex}.modal{width:min(520px,100%);background:var(--panel);border-radius:20px;padding:20px;box-shadow:0 25px 70px rgba(0,0,0,.25)}.modal h2{margin:0 0 16px}.field{margin-bottom:13px}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--primary);color:#fff;padding:11px 15px;border-radius:999px;display:none;z-index:30;font-size:13px}.toast.show{display:block}
+.profile{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);padding:11px;border-radius:14px;margin-top:14px}.profile .meta{min-width:0}.profile strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.profile span{font-size:11px;color:var(--muted)}
+.prayer-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.prayer{padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-align:center}.prayer b{display:block;font-size:12px}.prayer span{font-size:13px;color:var(--muted)}
+@media(max-width:650px){.prayer-row{grid-template-columns:repeat(2,1fr)}}
+footer{padding:15px 22px;color:var(--muted);font-size:11px;text-align:center;border-top:1px solid var(--line);background:#f8f5ed}
 </style>
 </head>
 <body>
-
-<div id="hc-config-error">
-  <div>
-    <h2 style="font-family:Georgia,serif;">Firebase isn't configured yet</h2>
-    <p>Open this file and fill in your <code>firebaseConfig</code> values near the top of the script, then redeploy.</p>
-  </div>
+<div id="app">
+<header>
+  <div class="brand"><div class="brand-mark">☪</div><div><h1>Halal Chat</h1><small>Connect. Learn. Belong.</small></div></div>
+  <div class="header-actions"><button class="icon-btn" id="profileBtn">Profile</button><button class="pill-btn" id="upgradeBtn">Pro</button></div>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <button class="btn" data-view="home">Home</button><button class="btn" data-view="discover">Discover</button><button class="btn" data-view="tools">Muslim Tools</button><button class="btn" data-view="messages">Messages</button>
+</div>
+<div class="layout">
+<aside>
+  <div class="nav-title">Workspace</div>
+  <button class="nav-btn active" data-view="home">⌂ Home</button>
+  <button class="nav-btn" data-view="discover">◎ Discover communities</button>
+  <button class="nav-btn" data-view="messages">✉ Messages</button>
+  <button class="nav-btn" data-view="tools">☪ Muslim tools</button>
+  <button class="nav-btn" data-view="events">◷ Events</button>
+  <div class="nav-title">My communities</div>
+  <div id="communityList" class="community-list"></div>
+  <button class="btn primary" style="width:100%;margin-top:10px" id="newCommunityBtn">+ Create community</button>
+  <div class="profile" id="profileCard"><div class="avatar">?</div><div class="meta"><strong>Connecting…</strong><span>Secure sign-in</span></div></div>
+</aside>
+<main id="main"></main>
+</div>
+<footer>Built for Muslim communities • Privacy-first by design • Community data should be protected with Firestore Security Rules</footer>
 </div>
 
-<div id="hc-wrap">
-  <div id="hc-root">
-    <div id="hc-header">
-      <button id="hc-back" class="hc-icon-btn" style="display:none;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#F6F3EA" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div id="hc-mark">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 3c-5 1-8 5-8 9.5S10 21 15 21c-6 1.5-12-2.5-12-9.5S9 1.5 15 3z" fill="#1F4B3F"/></svg>
-      </div>
-      <div id="hc-header-text">
-        <h1 id="hc-title">Halal Chat</h1>
-        <p id="hc-subtitle">Connecting…</p>
-      </div>
-      <button id="hc-prayer-btn" title="Prayer times & Qibla" style="background:var(--hc-gold);border:none;width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-right:2px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2B2110" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="#2B2110" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <button id="hc-new-btn" title="New channel or message">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#2B2110" stroke-width="2.4" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-
-    <div id="hc-list-screen">
-      <div class="hc-section-title">Channels</div>
-      <div id="hc-channel-list"></div>
-      <div class="hc-section-title">Direct messages</div>
-      <div id="hc-dm-list"></div>
-      <div id="hc-empty-list" style="display:none;">No conversations yet. Tap + to start one.</div>
-    </div>
-
-    <div id="hc-chat-screen">
-      <div id="hc-messages"><div id="hc-empty">No messages yet. Be the first to say salam 👋</div></div>
-      <div id="hc-inputbar">
-        <input id="hc-input" type="text" placeholder="Type a message…" maxlength="500" />
-        <button id="hc-send" aria-label="Send">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 20l18-8L3 4v6l12 2-12 2v6z" fill="#fff"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="hc-join-overlay" class="hc-overlay show">
-    <div class="hc-card">
-      <h2>Join Halal Chat</h2>
-      <p>This is a shared community space — channel messages are visible to everyone; direct messages are only between you and the other person.</p>
-      <input id="hc-name-input" class="hc-text-input" type="text" placeholder="Your display name" maxlength="30" />
-      <div id="hc-join-note" style="font-size:11px;color:var(--hc-danger);margin-bottom:10px;min-height:14px;"></div>
-      <button id="hc-join" class="hc-primary-btn">Join chat</button>
-    </div>
-  </div>
-
-  <div id="hc-new-overlay" class="hc-overlay">
-    <div class="hc-card">
-      <h2>Start something new</h2>
-      <div class="hc-tab-row">
-        <div id="hc-tab-channel" class="hc-tab active">New channel</div>
-        <div id="hc-tab-dm" class="hc-tab">Direct message</div>
-      </div>
-      <div id="hc-panel-channel">
-        <input id="hc-channel-input" class="hc-text-input" type="text" placeholder="Channel name, e.g. Quran Study" maxlength="30" />
-        <div id="hc-channel-note" style="font-size:11px;color:var(--hc-danger);margin-bottom:10px;min-height:14px;"></div>
-        <button id="hc-create-channel" class="hc-primary-btn">Create channel</button>
-      </div>
-      <div id="hc-panel-dm" style="display:none;">
-        <div id="hc-member-list"></div>
-        <div id="hc-member-empty" style="display:none;font-size:13px;color:var(--hc-ink-soft);text-align:center;padding:16px;">No other members have joined yet.</div>
-      </div>
-      <button id="hc-cancel-new" class="hc-ghost-btn">Cancel</button>
-    </div>
-  </div>
-
-  <div id="hc-prayer-overlay" class="hc-overlay">
-    <div class="hc-card">
-      <h2>Prayer Times & Qibla</h2>
-      <div id="hc-prayer-body">
-        <p style="text-align:center;color:var(--hc-ink-soft);font-size:13px;">Getting your location…</p>
-      </div>
-      <button id="hc-close-prayer" class="hc-ghost-btn" style="margin-top:14px;">Close</button>
-    </div>
-  </div>
-
-  <div id="hc-reminder-overlay" class="hc-overlay" style="z-index:20;">
-    <div class="hc-card" style="text-align:center;">
-      <div style="font-size:42px;line-height:1;">🕌</div>
-      <h2>Time for <span id="hc-reminder-name">Prayer</span></h2>
-      <p>Take a moment to pause and pray. The chat will be here when you're back.</p>
-      <button id="hc-reminder-dismiss" class="hc-primary-btn">I'll pray now</button>
-    </div>
-  </div>
-</div>
+<div class="overlay" id="modalOverlay"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, doc, setDoc, addDoc, deleteDoc, getDocs,
-  onSnapshot, query, where, orderBy, serverTimestamp
+  getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, updateDoc,
+  onSnapshot, query, where, orderBy, serverTimestamp, limit
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth, signInAnonymously, onAuthStateChanged, updateProfile
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// ============================================================
-// 1) PASTE YOUR FIREBASE CONFIG HERE
-//    Firebase console → Project settings → General → Your apps → SDK setup
-// ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyDvppQKyljG71-7RVe3ndF3EsadNENZ5Cw",
   authDomain: "halalchat-edece.firebaseapp.com",
@@ -225,556 +96,264 @@ const firebaseConfig = {
   appId: "1:744135067747:web:2f8b52ae2e3bd769a8d056",
   measurementId: "G-3JBFH8C8L5"
 };
-// ============================================================
-
-if (firebaseConfig.apiKey === "YOUR_API_KEY"){
-  document.getElementById('hc-config-error').style.display = 'flex';
-  throw new Error('Firebase config not set');
-}
 
 const app = initializeApp(firebaseConfig);
-const db = getDb();
-function getDb(){ return getFirestore(app); }
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-const DEFAULT_CHANNELS = [
-  {id:'general', name:'General'},
-  {id:'announcements', name:'Announcements'}
-];
+const state = {
+  user:null, profile:null, communities:[], currentCommunity:null, currentChannel:"general",
+  messagesUnsub:null, view:"home", prayer:null, qibla:null
+};
 
-let myName = null;
-let channels = [];
-let dmThreads = []; // {key,a,b}
-let currentChat = null; // {type, id (chatKey), title}
-let expandedIds = new Set();
-let unsubMessages = null;
-let unsubChannels = null;
-let unsubDmA = null, unsubDmB = null;
-let prayerTimers = [];
-let midnightTimer = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function toast(msg){ $("toast").textContent=msg; $("toast").classList.add("show"); setTimeout(()=>$("toast").classList.remove("show"),2600); }
+function initials(name){ return (name||"?").split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase(); }
+function time(ts){ if(!ts) return ""; const d=ts.toDate?ts.toDate():new Date(ts); return d.toLocaleString([], {hour:"2-digit",minute:"2-digit"}); }
+function showModal(html){ $("modal").innerHTML=html; $("modalOverlay").classList.add("show"); }
+function closeModal(){ $("modalOverlay").classList.remove("show"); }
+$("modalOverlay").addEventListener("click",e=>{if(e.target.id==="modalOverlay")closeModal()});
 
-const el = (id) => document.getElementById(id);
-const colors = ['#1F4B3F','#B98B2A','#6E5A9E','#3E7C8C','#A5573C','#5B7A3A'];
-function colorFor(name){ let h=0; for(let i=0;i<name.length;i++) h = name.charCodeAt(i) + ((h<<5)-h); return colors[Math.abs(h)%colors.length]; }
-function initials(name){ return name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
-function fmtTime(ts){ if(!ts) return ''; const d = ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
-function slug(name){ return name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || ('ch'+Date.now()); }
-function dmKeyFor(a,b){ return 'dm:' + [a,b].sort().join('|'); }
-function safeDocId(name){ return name.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
-function escapeHtml(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function nav(view){ state.view=view; document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("active",x.dataset.view===view)); render(); }
 
-// ---------- users ----------
-async function addUserIfMissing(name){
-  await setDoc(doc(db,'users', safeDocId(name)), { name, joinedAt: serverTimestamp() }, { merge: true });
-}
-async function loadAllUsers(){
-  const snap = await getDocs(collection(db,'users'));
-  return snap.docs.map(d => d.data());
-}
+document.querySelectorAll("[data-view]").forEach(x=>x.addEventListener("click",()=>nav(x.dataset.view)));
+$("profileBtn").onclick=()=>profileModal();
+$("upgradeBtn").onclick=()=>upgradeModal();
+$("newCommunityBtn").onclick=()=>communityModal();
 
-// ---------- channels ----------
-async function ensureDefaultChannels(){
-  const snap = await getDocs(collection(db,'channels'));
-  if (snap.empty){
-    for (const c of DEFAULT_CHANNELS){
-      await setDoc(doc(db,'channels', c.id), { name: c.name });
-    }
-  }
-}
-function listenChannels(cb){
-  return onSnapshot(collection(db,'channels'),
-    (snap) => {
-      channels = snap.docs.map(d => ({ id: d.id, name: d.data().name }));
-      cb();
-    },
-    (err) => { console.error('listenChannels error:', err); alert('Channel list error: ' + err.message); }
-  );
-}
-async function createChannel(name){
-  const id = slug(name);
-  await setDoc(doc(db,'channels', id), { name: name.trim() }, { merge: true });
-  return id;
-}
-
-// ---------- dm threads ----------
-function listenDmThreads(cb){
-  const qa = query(collection(db,'dmThreads'), where('a','==', myName));
-  const qb = query(collection(db,'dmThreads'), where('b','==', myName));
-  let resultsA = [], resultsB = [];
-  const merge = () => {
-    const map = new Map();
-    [...resultsA, ...resultsB].forEach(t => map.set(t.key, t));
-    dmThreads = Array.from(map.values());
-    cb();
+function profileModal(){
+  const p=state.profile||{};
+  showModal(`<h2>Your profile</h2>
+    <div class="field"><label>Display name</label><input id="profileName" maxlength="40" value="${esc(p.displayName||"")}"></div>
+    <div class="field"><label>Short bio</label><textarea id="profileBio" maxlength="160" rows="3">${esc(p.bio||"")}</textarea></div>
+    <div class="notice">Your Firebase user ID is used internally instead of your display name. Do not put private information in your public profile.</div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="saveProfile">Save</button></div>`);
+  $("saveProfile").onclick=async()=>{
+    const displayName=$("profileName").value.trim()||"Muslim user";
+    const bio=$("profileBio").value.trim();
+    await setDoc(doc(db,"users",state.user.uid),{displayName,bio,updatedAt:serverTimestamp()},{merge:true});
+    await updateProfile(state.user,{displayName});
+    state.profile={...state.profile,displayName,bio}; closeModal(); render(); toast("Profile updated");
   };
-  unsubDmA = onSnapshot(qa, (snap) => { resultsA = snap.docs.map(d => d.data()); merge(); });
-  unsubDmB = onSnapshot(qb, (snap) => { resultsB = snap.docs.map(d => d.data()); merge(); });
-}
-async function ensureDmPair(a,b){
-  const key = dmKeyFor(a,b);
-  await setDoc(doc(db,'dmThreads', key), { key, a, b, ts: serverTimestamp() }, { merge: true });
-  return key;
 }
 
-// ---------- messages ----------
-function listenMessages(chatKey, cb){
-  const q = query(collection(db,'messages'), where('chatKey','==', chatKey), orderBy('ts','asc'));
-  return onSnapshot(q,
-    (snap) => {
-      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      cb(list);
-    },
-    (err) => {
-      console.error('listenMessages error:', err);
-      alert('Chat read error: ' + err.message + '\n\nIf this mentions an index, open the link Firebase gives in the browser console and click "Create index".');
-    }
-  );
-}
-async function sendMessageToFirestore(chatKey, text){
-  try{
-    await addDoc(collection(db,'messages'), { chatKey, name: myName, text, ts: serverTimestamp() });
-  } catch(err){
-    console.error('sendMessage error:', err);
-    alert('Failed to send message: ' + err.message);
-    throw err;
-  }
-}
-async function deleteMessageDoc(id){ await deleteDoc(doc(db,'messages', id)); }
-async function reportMessageDoc(chatKey, msg){
-  await addDoc(collection(db,'reports'), {
-    chatKey, msgId: msg.id, text: msg.text, author: msg.name, reportedBy: myName, ts: serverTimestamp()
-  });
-}
-
-// ---------- rendering: list screen ----------
-function renderListScreen(){
-  el('hc-title').textContent = 'Halal Chat';
-  el('hc-subtitle').textContent = myName ? ('Signed in as ' + myName) : '';
-  el('hc-back').style.display = 'none';
-
-  const chList = el('hc-channel-list');
-  chList.innerHTML = '';
-  channels.forEach(c => {
-    const item = document.createElement('div');
-    item.className = 'hc-list-item';
-    item.innerHTML = `
-      <div class="hc-list-avatar" style="background:${colorFor(c.id)}">#</div>
-      <div class="hc-list-body">
-        <p class="hc-list-name">${escapeHtml(c.name)}</p>
-        <p class="hc-list-sub">Community channel</p>
-      </div>`;
-    item.addEventListener('click', () => openChat('channel', 'ch:'+c.id, c.name));
-    chList.appendChild(item);
-  });
-
-  const dmList = el('hc-dm-list');
-  dmList.innerHTML = '';
-  dmThreads.forEach(t => {
-    const other = t.a === myName ? t.b : t.a;
-    const item = document.createElement('div');
-    item.className = 'hc-list-item';
-    item.innerHTML = `
-      <div class="hc-list-avatar" style="background:${colorFor(other)}">${initials(other)}</div>
-      <div class="hc-list-body">
-        <p class="hc-list-name">${escapeHtml(other)}</p>
-        <p class="hc-list-sub">Direct message</p>
-      </div>`;
-    item.addEventListener('click', () => openChat('dm', t.key, other));
-    dmList.appendChild(item);
-  });
-
-  el('hc-empty-list').style.display = dmThreads.length === 0 ? 'block' : 'none';
-}
-
-// ---------- rendering: chat screen ----------
-function renderMessages(list){
-  const messagesEl = el('hc-messages');
-  if (list.length === 0){
-    messagesEl.innerHTML = '<div id="hc-empty">No messages yet. Be the first to say salam 👋</div>';
-    return;
-  }
-  const shouldStick = messagesEl.scrollTop + messagesEl.clientHeight >= messagesEl.scrollHeight - 40;
-  messagesEl.innerHTML = '';
-  list.forEach(m => {
-    const mine = m.name === myName;
-    const row = document.createElement('div');
-    row.className = 'hc-row ' + (mine ? 'mine' : 'theirs');
-
-    const avatar = document.createElement('div');
-    avatar.className = 'hc-avatar';
-    avatar.style.background = colorFor(m.name);
-    avatar.textContent = initials(m.name);
-
-    const wrap = document.createElement('div');
-    wrap.className = 'hc-bubble-wrap';
-
-    if (!mine){
-      const nameEl = document.createElement('p');
-      nameEl.className = 'hc-name';
-      nameEl.textContent = m.name;
-      wrap.appendChild(nameEl);
-    }
-
-    const bubble = document.createElement('div');
-    bubble.className = 'hc-bubble';
-    bubble.textContent = m.text;
-    bubble.addEventListener('click', () => {
-      if (expandedIds.has(m.id)) expandedIds.delete(m.id); else expandedIds.add(m.id);
-      renderMessages(list);
-    });
-    wrap.appendChild(bubble);
-
-    const metaRow = document.createElement('div');
-    metaRow.className = 'hc-meta-row';
-    const time = document.createElement('span');
-    time.className = 'hc-time';
-    time.textContent = fmtTime(m.ts);
-    metaRow.appendChild(time);
-    wrap.appendChild(metaRow);
-
-    if (expandedIds.has(m.id)){
-      const actions = document.createElement('div');
-      actions.className = 'hc-actions';
-      if (mine){
-        const del = document.createElement('button');
-        del.className = 'hc-action-link delete';
-        del.textContent = 'Delete';
-        del.addEventListener('click', async (e) => { e.stopPropagation(); await deleteMessageDoc(m.id); expandedIds.delete(m.id); });
-        actions.appendChild(del);
-      } else {
-        const rep = document.createElement('button');
-        rep.className = 'hc-action-link report';
-        rep.textContent = 'Report';
-        rep.addEventListener('click', async (e) => { e.stopPropagation(); await reportMessageDoc(currentChat.id, m); expandedIds.delete(m.id); flashSubtitle('Message reported — thank you'); renderMessages(list); });
-        actions.appendChild(rep);
-      }
-      wrap.appendChild(actions);
-    }
-
-    row.appendChild(avatar);
-    row.appendChild(wrap);
-    messagesEl.appendChild(row);
-  });
-  if (shouldStick) messagesEl.scrollTop = messagesEl.scrollHeight;
-}
-
-function flashSubtitle(text){
-  const original = currentChat ? currentChat.title : '';
-  el('hc-subtitle').textContent = text;
-  setTimeout(() => { if (currentChat) el('hc-subtitle').textContent = currentChat.title; }, 2000);
-}
-
-// ---------- navigation ----------
-function openChat(type, chatKey, title){
-  currentChat = { type, id: chatKey, title };
-  expandedIds = new Set();
-  el('hc-list-screen').style.display = 'none';
-  el('hc-chat-screen').style.display = 'flex';
-  el('hc-back').style.display = 'flex';
-  el('hc-title').textContent = title;
-  el('hc-subtitle').textContent = type === 'channel' ? 'Community channel' : 'Direct message';
-  if (unsubMessages) unsubMessages();
-  unsubMessages = listenMessages(chatKey, renderMessages);
-}
-
-function goToList(){
-  currentChat = null;
-  if (unsubMessages) { unsubMessages(); unsubMessages = null; }
-  el('hc-chat-screen').style.display = 'none';
-  el('hc-list-screen').style.display = 'block';
-  renderListScreen();
-}
-
-async function sendMessage(){
-  const input = el('hc-input');
-  const text = input.value.trim();
-  if (!text || !myName || !currentChat) return;
-  el('hc-send').disabled = true;
-  try{
-    await sendMessageToFirestore(currentChat.id, text);
-    input.value = '';
-  } catch(err){
-    // error already alerted in sendMessageToFirestore; keep text in box so nothing is lost
-  }
-  el('hc-send').disabled = false;
-  input.focus();
-}
-
-// ---------- new channel / DM overlay ----------
-function openNewOverlay(){ el('hc-new-overlay').classList.add('show'); switchTab('channel'); renderMemberList(); }
-function closeNewOverlay(){ el('hc-new-overlay').classList.remove('show'); }
-function switchTab(tab){
-  el('hc-tab-channel').classList.toggle('active', tab === 'channel');
-  el('hc-tab-dm').classList.toggle('active', tab === 'dm');
-  el('hc-panel-channel').style.display = tab === 'channel' ? 'block' : 'none';
-  el('hc-panel-dm').style.display = tab === 'dm' ? 'block' : 'none';
-}
-async function renderMemberList(){
-  const all = await loadAllUsers();
-  const others = all.filter(u => u.name !== myName);
-  const listEl = el('hc-member-list');
-  listEl.innerHTML = '';
-  others.forEach(u => {
-    const item = document.createElement('div');
-    item.className = 'hc-member-item';
-    item.innerHTML = `<div class="hc-list-avatar" style="width:32px;height:32px;font-size:12px;background:${colorFor(u.name)}">${initials(u.name)}</div><span>${escapeHtml(u.name)}</span>`;
-    item.addEventListener('click', async () => {
-      const key = await ensureDmPair(myName, u.name);
-      closeNewOverlay();
-      openChat('dm', key, u.name);
-    });
-    listEl.appendChild(item);
-  });
-  el('hc-member-empty').style.display = others.length === 0 ? 'block' : 'none';
-}
-
-// ---------- init / join ----------
-function getUsername(){ return localStorage.getItem('hc-username'); }
-function setUsername(name){ localStorage.setItem('hc-username', name); }
-
-async function bootAfterJoin(){
-  el('hc-join-overlay').classList.remove('show');
-  await addUserIfMissing(myName);
-  await ensureDefaultChannels();
-  if (unsubChannels) unsubChannels();
-  unsubChannels = listenChannels(renderListScreen);
-  listenDmThreads(renderListScreen);
-  goToList();
-  initReminders();
-}
-
-async function init(){
-  myName = getUsername();
-  if (myName) await bootAfterJoin();
-}
-
-el('hc-join').addEventListener('click', async () => {
-  const name = el('hc-name-input').value.trim();
-  if (!name){ el('hc-join-note').textContent = 'Please enter a name to continue.'; return; }
-  myName = name;
-  setUsername(name);
-  await bootAfterJoin();
-});
-el('hc-name-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') el('hc-join').click(); });
-
-el('hc-back').addEventListener('click', goToList);
-el('hc-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
-el('hc-send').addEventListener('click', sendMessage);
-
-el('hc-new-btn').addEventListener('click', openNewOverlay);
-el('hc-cancel-new').addEventListener('click', closeNewOverlay);
-el('hc-tab-channel').addEventListener('click', () => switchTab('channel'));
-el('hc-tab-dm').addEventListener('click', () => { switchTab('dm'); renderMemberList(); });
-el('hc-create-channel').addEventListener('click', async () => {
-  const name = el('hc-channel-input').value.trim();
-  if (!name){ el('hc-channel-note').textContent = 'Please enter a channel name.'; return; }
-  const id = await createChannel(name);
-  el('hc-channel-input').value = '';
-  closeNewOverlay();
-  openChat('channel', 'ch:'+id, name);
-});
-
-// ---------- prayer times & qibla ----------
-const PRAYER_ORDER = ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
-const MAIN_PRAYERS = ['Fajr','Dhuhr','Asr','Maghrib','Isha'];
-
-function fmt12(hhmm){
-  const [h, m] = hhmm.split(':').map(Number);
-  const period = h >= 12 ? 'PM' : 'AM';
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}:${String(m).padStart(2,'0')} ${period}`;
-}
-
-function findNextPrayer(timings){
-  const now = new Date();
-  for (const name of MAIN_PRAYERS){
-    const [h,m] = timings[name].split(':').map(Number);
-    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m);
-    if (t > now) return name;
-  }
-  return MAIN_PRAYERS[0]; // after Isha, next is tomorrow's Fajr
-}
-
-function renderPrayerBody(timings, direction, lat, lon){
-  const next = findNextPrayer(timings);
-  const rows = MAIN_PRAYERS.map(name => {
-    const isNext = name === next;
-    return `
-      <div class="hc-prayer-row ${isNext ? 'next' : ''}">
-        <span class="hc-prayer-name">${name}${isNext ? '<span class="hc-next-badge">Next</span>' : ''}</span>
-        <span class="hc-prayer-time">${fmt12(timings[name])}</span>
-      </div>`;
-  }).join('');
-
-  const compassSvg = `
-    <svg width="120" height="120" viewBox="0 0 120 120">
-      <circle cx="60" cy="60" r="52" fill="none" stroke="#5B6B62" stroke-width="1.5"/>
-      <text x="60" y="16" text-anchor="middle" font-size="11" fill="#5B6B62">N</text>
-      <text x="60" y="112" text-anchor="middle" font-size="11" fill="#5B6B62">S</text>
-      <text x="10" y="64" text-anchor="middle" font-size="11" fill="#5B6B62">W</text>
-      <text x="110" y="64" text-anchor="middle" font-size="11" fill="#5B6B62">E</text>
-      <g transform="rotate(${direction} 60 60)">
-        <line x1="60" y1="60" x2="60" y2="16" stroke="#B98B2A" stroke-width="3" stroke-linecap="round"/>
-        <polygon points="60,8 54,22 66,22" fill="#B98B2A"/>
-      </g>
-      <circle cx="60" cy="60" r="4" fill="#1F4B3F"/>
-    </svg>`;
-
-  const enabled = remindersEnabled();
-  el('hc-prayer-body').innerHTML = `
-    <div class="hc-prayer-loc">Based on your current location</div>
-    ${rows}
-    <div class="hc-qibla-wrap">
-      ${compassSvg}
-      <div class="hc-qibla-degree">Qibla is ${Math.round(direction)}° from North<br/>(gold arrow shows the direction to face)</div>
+function upgradeModal(){
+  showModal(`<h2>Halal Chat Pro</h2>
+    <p style="color:var(--muted)">The product is structured for paid plans, but payments are intentionally not wired into the client yet.</p>
+    <div class="grid" style="grid-template-columns:1fr 1fr;margin:15px 0">
+      <div class="card"><h3>Free</h3><p>Join communities, chat, DMs, basic Muslim tools and events.</p></div>
+      <div class="card"><h3>Pro</h3><p>AI research tools, advanced search, premium privacy controls and extra productivity features.</p></div>
     </div>
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--hc-line);text-align:center;">
-      <button id="hc-toggle-reminders" class="hc-primary-btn" style="max-width:240px;margin:0 auto;">${enabled ? 'Reminders on ✓ (tap to turn off)' : 'Enable prayer reminders'}</button>
-      <p style="font-size:11px;color:var(--hc-ink-soft);margin-top:8px;">We'll notify you at each prayer time and briefly pause the chat box.</p>
-    </div>`;
+    <div class="notice">For organizations, the stronger monetization path is Community Pro: admin tools, moderation, member management, events, analytics and verification.</div>
+    <div class="modal-actions"><button class="btn primary" onclick="closeModal()">Got it</button></div>`);
+}
 
-  el('hc-toggle-reminders').addEventListener('click', async () => {
-    if (remindersEnabled()){
-      disableReminders();
-    } else {
-      await enableReminders(lat, lon, timings);
-    }
-    renderPrayerBody(timings, direction, lat, lon);
+function communityModal(){
+  showModal(`<h2>Create a community</h2>
+    <div class="field"><label>Name</label><input id="cName" maxlength="60" placeholder="e.g. Abuja Muslim Students"></div>
+    <div class="field"><label>Description</label><textarea id="cDesc" maxlength="240" rows="3" placeholder="What is this community for?"></textarea></div>
+    <div class="field"><label>Visibility</label><select id="cVisibility"><option value="public">Public — discoverable</option><option value="private">Private — invite only</option></select></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="createCommunity">Create</button></div>`);
+  $("createCommunity").onclick=async()=>{
+    const name=$("cName").value.trim(), description=$("cDesc").value.trim(), visibility=$("cVisibility").value;
+    if(!name){toast("Give the community a name");return}
+    const ref=await addDoc(collection(db,"communities"),{
+      name,description,visibility,ownerId:state.user.uid,memberCount:1,verified:false,
+      createdAt:serverTimestamp()
+    });
+    await setDoc(doc(db,"communities",ref.id,"members",state.user.uid),{role:"owner",joinedAt:serverTimestamp()});
+    await setDoc(doc(db,"communities",ref.id,"channels","general"),{name:"general",description:"Community-wide conversation"});
+    closeModal(); await loadCommunities(); openCommunity(ref.id); toast("Community created");
+  };
+}
+
+async function ensureProfile(){
+  const ref=doc(db,"users",state.user.uid), snap=await getDoc(ref);
+  if(!snap.exists()){
+    const name=localStorage.getItem("halalchat_displayName") || "Muslim user";
+    await setDoc(ref,{displayName:name,bio:"",createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+  }
+  const fresh=await getDoc(ref); state.profile=fresh.data();
+  localStorage.setItem("halalchat_displayName",state.profile.displayName||"Muslim user");
+}
+
+async function loadCommunities(){
+  const qs=await getDocs(query(collection(db,"communities"),orderBy("createdAt","desc"),limit(50)));
+  state.communities=qs.docs.map(d=>({id:d.id,...d.data()}));
+  renderCommunityList();
+}
+function renderCommunityList(){
+  $("communityList").innerHTML=state.communities.length ? state.communities.slice(0,12).map(c=>
+    `<button class="community-item ${state.currentCommunity?.id===c.id?"active":""}" data-cid="${c.id}">
+      <div class="avatar">${initials(c.name)}</div><div class="meta"><strong>${esc(c.name)} ${c.verified?"✓":""}</strong><span>${c.visibility==="private"?"Private":"Public"} · ${c.memberCount||1} member${(c.memberCount||1)==1?"":"s"}</span></div>
+    </button>`).join("") : `<div class="empty" style="padding:15px 5px">No communities yet.</div>`;
+  document.querySelectorAll("[data-cid]").forEach(x=>x.onclick=()=>openCommunity(x.dataset.cid));
+}
+
+async function openCommunity(id){
+  const c=state.communities.find(x=>x.id===id); if(!c)return;
+  state.currentCommunity=c; state.currentChannel="general"; nav("community");
+}
+
+function communityView(){
+  const c=state.currentCommunity;
+  if(!c)return `<div class="content"><div class="empty">Choose a community.</div></div>`;
+  return `<div class="chat-shell">
+    <div class="chat-head"><div><h2>${esc(c.name)} ${c.verified?"✓":""}</h2><p>${esc(c.description||"Community conversation")} · ${c.visibility==="private"?"Private":"Public"}</p></div>
+      <div><button class="btn" id="communityInfoBtn">Info</button></div></div>
+    <div class="messages" id="messages"></div>
+    <div class="composer"><textarea id="messageInput" placeholder="Write something respectful…"></textarea><button class="btn primary" id="sendBtn">Send</button></div>
+  </div>`;
+}
+
+function subscribeMessages(){
+  if(state.messagesUnsub) state.messagesUnsub();
+  if(!state.currentCommunity)return;
+  const q=query(collection(db,"communities",state.currentCommunity.id,"channels",state.currentChannel,"messages"),orderBy("createdAt","asc"),limit(200));
+  state.messagesUnsub=onSnapshot(q,snap=>{
+    const box=$("messages"); if(!box)return;
+    box.innerHTML=snap.docs.length?snap.docs.map(d=>{
+      const m=d.data(), mine=m.uid===state.user.uid;
+      return `<div class="msg ${mine?"me":""}" data-message="${d.id}">
+        <div class="msg-top">${esc(m.displayName||"Muslim user")}<span>${time(m.createdAt)}</span></div>
+        <div class="msg-text">${esc(m.text)}</div>
+        <div class="msg-actions"><button class="tiny report" data-id="${d.id}">Report</button>${mine?`<button class="tiny" data-delete="${d.id}">Delete</button>`:""}</div>
+      </div>`;
+    }).join(""):`<div class="empty">No messages yet. Start with salam 👋</div>`;
+    box.scrollTop=box.scrollHeight;
+    document.querySelectorAll(".report").forEach(b=>b.onclick=()=>reportMessage(b.dataset.id));
+    document.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteMessage(b.dataset.delete));
+  },err=>{console.error(err);toast("Could not load messages. Check Firestore rules.");});
+}
+async function sendMessage(){
+  const input=$("messageInput"), text=input.value.trim(); if(!text||!state.currentCommunity)return;
+  await addDoc(collection(db,"communities",state.currentCommunity.id,"channels",state.currentChannel,"messages"),{
+    uid:state.user.uid,displayName:state.profile.displayName||"Muslim user",text,createdAt:serverTimestamp()
   });
+  input.value=""; input.focus();
+}
+async function deleteMessage(id){
+  if(!state.currentCommunity)return;
+  await updateDoc(doc(db,"communities",state.currentCommunity.id,"channels",state.currentChannel,"messages",id),{deleted:true,text:"Message deleted"});
+  toast("Message removed");
+}
+async function reportMessage(id){
+  if(!state.currentCommunity)return;
+  await addDoc(collection(db,"reports"),{type:"message",communityId:state.currentCommunity.id,messageId:id,reporterId:state.user.uid,createdAt:serverTimestamp()});
+  toast("Report submitted to moderators");
+}
+function communityInfo(){
+  const c=state.currentCommunity;
+  showModal(`<h2>${esc(c.name)}</h2><p style="color:var(--muted)">${esc(c.description||"No description")}</p>
+    <div class="list"><div class="list-row"><span>Visibility</span><b>${c.visibility}</b></div><div class="list-row"><span>Members</span><b>${c.memberCount||1}</b></div><div class="list-row"><span>Verified organization</span><b>${c.verified?"Yes":"Not yet"}</b></div></div>
+    <div class="notice" style="margin-top:14px">Owner/admin verification should be performed server-side. Never trust a client-side role flag for moderation or billing.</div>
+    <div class="modal-actions"><button class="btn primary" onclick="closeModal()">Close</button></div>`);
 }
 
-function renderPrayerError(message){
-  el('hc-prayer-body').innerHTML = `
-    <p style="text-align:center;color:var(--hc-danger);font-size:13px;">${escapeHtml(message)}</p>
-    <button id="hc-retry-location" class="hc-primary-btn hc-retry-btn" style="max-width:180px;">Try again</button>`;
-  el('hc-retry-location').addEventListener('click', loadPrayerTimes);
+function homeView(){
+ return `<div class="content">
+   <section class="hero"><div><h2>One trusted home for your Muslim community.</h2><p>Create or join focused communities for mosques, student groups, Quran circles, professionals, families and local networks.</p></div>
+   <div class="hero-actions"><button class="btn gold" id="heroCreate">Create community</button><button class="btn" id="heroDiscover">Discover</button></div></section>
+   <div class="grid">
+    <div class="card"><h3>💬 Community chat</h3><p>Real-time channels with identity, reporting and moderation foundations.</p></div>
+    <div class="card"><h3>🛡️ Privacy first</h3><p>User records are keyed by Firebase UID rather than display names.</p></div>
+    <div class="card"><h3>🕌 Muslim tools</h3><p>Prayer times, Qibla and a foundation for Quran, Hadith and Islamic resources.</p></div>
+   </div>
+   <div class="section-head"><h2>My communities</h2><button class="btn" id="homeNew">+ New</button></div>
+   <div class="community-cards">${state.communities.length?state.communities.slice(0,6).map(c=>communityCard(c)).join(""):`<div class="card"><h3>Start with one real community</h3><p>Invite a mosque, MSA, Quran circle or local group. Density is more important than adding dozens of features.</p></div>`}</div>
+   <div class="section-head"><h2>Quick access</h2></div>
+   <div class="tools"><button class="tool" data-go="tools"><div>🕋</div><b>Prayer & Qibla</b><span>Find prayer times and direction.</span></button><button class="tool" data-go="events"><div>📅</div><b>Events</b><span>Build community activity around events.</span></button><button class="tool" data-go="discover"><div>🔎</div><b>Discover</b><span>Find communities that fit you.</span></button><button class="tool" data-go="messages"><div>✉️</div><b>Messages</b><span>Direct messaging foundation.</span></button></div>
+ </div>`;
+}
+function communityCard(c){
+ return `<div class="community-card"><div class="community-card-top"><div class="avatar">${initials(c.name)}</div><div><strong>${esc(c.name)} ${c.verified?"✓":""}</strong><div style="font-size:11px;color:var(--muted)">${c.visibility} · ${c.memberCount||1} members</div></div></div><p>${esc(c.description||"A Muslim community on Halal Chat.")}</p><div class="tags"><span class="tag">Chat</span><span class="tag">Events</span><span class="tag">Moderation</span></div><button class="btn primary" style="width:100%;margin-top:12px" data-open="${c.id}">Open community</button></div>`;
 }
 
-async function loadPrayerTimes(){
-  el('hc-prayer-body').innerHTML = '<p style="text-align:center;color:var(--hc-ink-soft);font-size:13px;">Getting your location…</p>';
-  if (!navigator.geolocation){
-    renderPrayerError('Your browser does not support location access.');
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      const { latitude, longitude } = pos.coords;
-      try{
-        el('hc-prayer-body').innerHTML = '<p style="text-align:center;color:var(--hc-ink-soft);font-size:13px;">Fetching prayer times…</p>';
-        const [timingsRes, qiblaRes] = await Promise.all([
-          fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=2`),
-          fetch(`https://api.aladhan.com/v1/qibla/${latitude}/${longitude}`)
-        ]);
-        const timingsJson = await timingsRes.json();
-        const qiblaJson = await qiblaRes.json();
-        cacheTimings(timingsJson.data.timings);
-        localStorage.setItem('hc-prayer-loc', JSON.stringify({ lat: latitude, lon: longitude }));
-        renderPrayerBody(timingsJson.data.timings, qiblaJson.data.direction, latitude, longitude);
-        if (remindersEnabled()) scheduleAllReminders(timingsJson.data.timings);
-      } catch(err){
-        console.error('prayer fetch error', err);
-        renderPrayerError('Could not load prayer times right now. Please try again.');
-      }
-    },
-    (err) => {
-      console.error('geolocation error', err);
-      renderPrayerError('Location access was denied. Please allow location access in your browser settings and try again.');
-    }
-  );
+function discoverView(){
+ const items=state.communities.filter(c=>c.visibility==="public");
+ return `<div class="content"><div class="section-head"><h2>Discover communities</h2><button class="btn primary" id="discoverCreate">+ Create</button></div>
+ <div class="notice">Launch with a focused network first. Examples: mosque communities, university Muslim associations, Quran study groups, professional networks and local sisters/brothers groups.</div>
+ <div class="community-cards">${items.length?items.map(c=>communityCard(c)).join(""):`<div class="card"><h3>No public communities yet</h3><p>Create the first one and invite people who already know each other.</p></div>`}</div></div>`;
+}
+function toolsView(){
+ return `<div class="content"><div class="section-head"><h2>Muslim tools</h2><button class="btn" id="locBtn">Use my location</button></div>
+ <div class="tools"><button class="tool" id="prayerTool"><div>🕌</div><b>Prayer times</b><span>Location-based daily schedule.</span></button><button class="tool" id="qiblaTool"><div>🧭</div><b>Qibla</b><span>Direction from your current location.</span></button><button class="tool" onclick="toast('Quran module is planned for the next release')"><div>📖</div><b>Quran</b><span>Planned: searchable reading experience.</span></button><button class="tool" onclick="toast('Hadith module is planned for the next release')"><div>📚</div><b>Hadith & sources</b><span>Planned: references and attribution.</span></button></div>
+ <div id="toolResult" style="margin-top:18px"></div>
+ </div>`;
+}
+async function getLocation(){
+ if(!navigator.geolocation){toast("Location is not supported");return null}
+ return new Promise(resolve=>navigator.geolocation.getCurrentPosition(p=>resolve(p.coords),()=>resolve(null),{enableHighAccuracy:true,timeout:10000}));
+}
+async function loadPrayer(){
+ const coords=await getLocation(); if(!coords){toast("Allow location access to calculate prayer times");return}
+ $("toolResult").innerHTML='<div class="notice">Loading prayer times…</div>';
+ try{
+   const d=new Date(), url=`https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${coords.latitude}&longitude=${coords.longitude}&method=2`;
+   const data=await fetch(url).then(r=>r.json()); const t=data.data.timings;
+   const names=["Fajr","Dhuhr","Asr","Maghrib","Isha"];
+   $("toolResult").innerHTML=`<div class="card"><h3>Today's prayer times</h3><div class="prayer-row">${names.map(n=>`<div class="prayer"><b>${n}</b><span>${esc(t[n])}</span></div>`).join("")}</div><p style="margin-top:12px">Calculated for your current location. Verify the method/settings with your local mosque when precision matters.</p></div>`;
+ }catch(e){$("toolResult").innerHTML='<div class="notice error">Prayer service unavailable right now.</div>'}
+}
+async function loadQibla(){
+ const coords=await getLocation(); if(!coords){toast("Allow location access to calculate Qibla");return}
+ try{
+   const data=await fetch(`https://api.aladhan.com/v1/qibla/${coords.latitude}/${coords.longitude}`).then(r=>r.json());
+   const direction=data.data.direction;
+   $("toolResult").innerHTML=`<div class="card"><h3>Qibla direction</h3><div style="font-size:48px;text-align:center;margin:15px">🧭</div><p style="text-align:center;font-size:24px;font-weight:800">${Number(direction).toFixed(1)}°</p><p style="text-align:center">Bearing from true north.</p></div>`;
+ }catch(e){$("toolResult").innerHTML='<div class="notice error">Qibla service unavailable right now.</div>'}
+}
+function eventsView(){
+ return `<div class="content"><div class="section-head"><h2>Community events</h2><button class="btn primary" id="newEvent">+ Add event</button></div>
+ <div class="notice">Events are a key retention feature: use them to turn a chat group into an active community.</div><div id="eventsList" class="list"><div class="empty">Loading events…</div></div></div>`;
+}
+async function loadEvents(){
+ const box=$("eventsList"); if(!box)return;
+ const snap=await getDocs(query(collection(db,"events"),orderBy("startAt","asc"),limit(50)));
+ const events=snap.docs.map(d=>({id:d.id,...d.data()}));
+ box.innerHTML=events.length?events.map(e=>`<div class="list-row"><div><b>${esc(e.title)}</b><div style="font-size:12px;color:var(--muted)">${e.startAt?.toDate?e.startAt.toDate().toLocaleString(): "Date to be confirmed"} · ${esc(e.location||"Online")}</div></div><button class="btn" data-rsvp="${e.id}">RSVP</button></div>`).join(""):`<div class="empty">No events yet. Create one for your community.</div>`;
+ document.querySelectorAll("[data-rsvp]").forEach(b=>b.onclick=()=>toast("RSVP UI is ready; attendance storage can be connected next."));
+}
+function eventModal(){
+ showModal(`<h2>Add an event</h2><div class="field"><label>Title</label><input id="eTitle" maxlength="80" placeholder="Quran study circle"></div><div class="field"><label>Date & time</label><input id="eDate" type="datetime-local"></div><div class="field"><label>Location</label><input id="eLocation" maxlength="100" placeholder="Community hall or online"></div><div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="saveEvent">Save</button></div>`);
+ $("saveEvent").onclick=async()=>{const title=$("eTitle").value.trim(), dt=$("eDate").value, location=$("eLocation").value.trim();if(!title||!dt){toast("Title and date are required");return}await addDoc(collection(db,"events"),{title,startAt:new Date(dt),location,createdBy:state.user.uid,createdAt:serverTimestamp()});closeModal();loadEvents();toast("Event added")};
+}
+function messagesView(){
+ return `<div class="content"><div class="section-head"><h2>Messages</h2></div><div class="notice">Direct messages are the next private-network layer. The current prototype focuses on secure community identity and channels first.</div><div class="card"><h3>DM foundation</h3><p>Use Firebase UID-based threads for one-to-one conversations. Add block/report controls before public launch.</p><button class="btn primary" style="margin-top:12px" onclick="toast('DM composer will be enabled after community membership rules are deployed')">New message</button></div></div>`;
 }
 
-// ---------- prayer reminders (notifications + in-app pause) ----------
-function todayStr(){ return new Date().toISOString().slice(0,10); }
-function cacheTimings(timings){ localStorage.setItem('hc-prayer-cache', JSON.stringify({ date: todayStr(), timings })); }
-function remindersEnabled(){ return localStorage.getItem('hc-prayer-reminders') === 'on'; }
-
-function clearScheduledReminders(){
-  prayerTimers.forEach(id => clearTimeout(id));
-  prayerTimers = [];
-  if (midnightTimer) { clearTimeout(midnightTimer); midnightTimer = null; }
+function render(){
+ const main=$("main");
+ if(state.view==="home") main.innerHTML=homeView();
+ else if(state.view==="discover") main.innerHTML=discoverView();
+ else if(state.view==="tools") main.innerHTML=toolsView();
+ else if(state.view==="events") main.innerHTML=eventsView();
+ else if(state.view==="messages") main.innerHTML=messagesView();
+ else if(state.view==="community"){main.innerHTML=communityView(); setTimeout(subscribeMessages,0);}
+ renderCommunityList();
+ document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openCommunity(b.dataset.open));
+ document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>nav(b.dataset.go));
+ $("heroCreate")?.addEventListener("click",communityModal); $("homeNew")?.addEventListener("click",communityModal); $("discoverCreate")?.addEventListener("click",communityModal);
+ $("sendBtn")?.addEventListener("click",sendMessage); $("messageInput")?.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});
+ $("communityInfoBtn")?.addEventListener("click",communityInfo);
+ $("prayerTool")?.addEventListener("click",loadPrayer); $("qiblaTool")?.addEventListener("click",loadQibla); $("locBtn")?.addEventListener("click",loadPrayer);
+ $("newEvent")?.addEventListener("click",eventModal); if(state.view==="events")loadEvents();
+ if(state.profile){$("profileCard").innerHTML=`<div class="avatar">${initials(state.profile.displayName)}</div><div class="meta"><strong>${esc(state.profile.displayName)}</strong><span>Firebase UID account</span></div>`}
 }
 
-function scheduleAllReminders(timings){
-  clearScheduledReminders();
-  const now = new Date();
-  MAIN_PRAYERS.forEach(name => {
-    const [h,m] = timings[name].split(':').map(Number);
-    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
-    if (t > now){
-      const id = setTimeout(() => firePrayerReminder(name), t - now);
-      prayerTimers.push(id);
-    }
-  });
-  const nextRefresh = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 5, 0);
-  midnightTimer = setTimeout(async () => {
-    localStorage.removeItem('hc-prayer-cache');
-    await initReminders();
-  }, nextRefresh - now);
-}
-
-function firePrayerReminder(name){
-  el('hc-reminder-name').textContent = name;
-  el('hc-reminder-overlay').classList.add('show');
-  el('hc-send').disabled = true;
-  if (window.Notification && Notification.permission === 'granted'){
-    try{ new Notification('Time for ' + name + ' prayer', { body: "It's time to pause and pray. 🕌" }); }
-    catch(e){ console.error('notification failed', e); }
-  }
-}
-
-async function enableReminders(lat, lon, timings){
-  if (window.Notification && Notification.permission !== 'granted'){
-    try{
-      const perm = await Notification.requestPermission();
-      if (perm !== 'granted'){
-        alert("Notifications weren't allowed — you'll still get an in-app reminder while the chat is open.");
-      }
-    } catch(e){ /* ignore */ }
-  }
-  localStorage.setItem('hc-prayer-reminders', 'on');
-  if (lat != null && lon != null){
-    localStorage.setItem('hc-prayer-loc', JSON.stringify({ lat, lon }));
-  }
-  if (timings) { cacheTimings(timings); scheduleAllReminders(timings); }
-}
-
-function disableReminders(){
-  localStorage.setItem('hc-prayer-reminders', 'off');
-  clearScheduledReminders();
-}
-
-async function initReminders(){
-  if (!remindersEnabled()) return;
-  const locStr = localStorage.getItem('hc-prayer-loc');
-  if (!locStr) return;
-  const { lat, lon } = JSON.parse(locStr);
-  let timings = null;
-  const cacheStr = localStorage.getItem('hc-prayer-cache');
-  if (cacheStr){
-    const cache = JSON.parse(cacheStr);
-    if (cache.date === todayStr()) timings = cache.timings;
-  }
-  if (!timings){
-    try{
-      const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`);
-      const json = await res.json();
-      timings = json.data.timings;
-      cacheTimings(timings);
-    } catch(e){ console.error('reminder timings refresh failed', e); return; }
-  }
-  scheduleAllReminders(timings);
-}
-
-el('hc-prayer-btn').addEventListener('click', () => {
-  el('hc-prayer-overlay').classList.add('show');
-  loadPrayerTimes();
-});
-el('hc-close-prayer').addEventListener('click', () => el('hc-prayer-overlay').classList.remove('show'));
-el('hc-reminder-dismiss').addEventListener('click', () => {
-  el('hc-reminder-overlay').classList.remove('show');
-  el('hc-send').disabled = false;
+onAuthStateChanged(auth,async user=>{
+ if(user){state.user=user; await ensureProfile(); await loadCommunities(); render(); return}
+ try{
+   await signInAnonymously(auth);
+ }catch(e){
+   console.error(e);
+   $("main").innerHTML=`<div class="content"><div class="notice error"><b>Firebase Authentication needs one console setting.</b><br><br>Enable <b>Anonymous</b> sign-in in Firebase Console → Authentication → Sign-in method, then reload this page.</div></div>`;
+ }
 });
 
-init();
+window.closeModal=closeModal;
+window.toast=toast;
 </script>
 </body>
 </html>
