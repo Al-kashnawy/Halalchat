@@ -47,3 +47,8 @@ The frontend Firebase configuration is not a server secret. Security comes from 
 The site now includes a polished Sign in / Create account flow with email/password, Google sign-in, password reset, and profile onboarding. New email accounts are asked for a display name and optional bio, location, and interests. Email verification is requested after email/password registration.
 
 In Firebase Console, enable **Anonymous**, **Email/Password**, and optionally **Google** under Authentication → Sign-in method. Configure the authorized domain for your deployed Vercel site if Firebase asks for it.
+
+Multilingual repair note:
+- English, Arabic (RTL), French, and Hausa language selector restored safely.
+- Translation is applied at runtime to static and modal UI text without altering Firebase logic.
+- Existing Firestore rules are retained; no rules change is required for language support.
