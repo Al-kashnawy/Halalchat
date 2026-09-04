@@ -1,54 +1,36 @@
-# Halal Chat — Production MVP
+# Halal Chat — multilingual production candidate
 
-Halal Chat is a privacy-first Muslim community platform built around trusted communities, messaging, events and Muslim-first utilities.
+Languages: English, Arabic (RTL), French, Hausa.
 
-## Included
-- Firebase Authentication: anonymous, email/password and optional Google sign-in
-- UID-based profiles
-- Public and private communities
-- Community membership and owner/admin/moderator foundations
-- Invite-code flow for private communities
-- Real-time community channels and messages
-- Message deletion and reporting
-- One-to-one DM threads with member-scoped Firestore rules
-- User blocking foundation
-- Events + RSVP storage
-- Prayer times + Qibla via Aladhan
-- Responsive web UI for desktop/mobile
-- Firestore security rules
+## Before deployment
+1. Deploy Hosting and Firestore rules together: `firebase deploy`.
+2. In Firebase Authentication, enable Anonymous, Email/Password, and optionally Google sign-in.
+3. Confirm Firestore is enabled for the `halalchat-edece` project.
+4. Test on a phone and desktop after deployment.
 
-## Before public launch
-1. In Firebase Authentication, enable Anonymous and Email/Password. Enable Google only if you want it.
-2. Deploy `firestore.rules`.
-3. Create the Firestore composite indexes requested by Firebase when queries first run.
-4. Add App Check before opening the service broadly.
-5. Connect payments through a server-side Stripe/Paystack integration. Never trust client-only subscription state.
-6. Add a real admin console and server-side moderation workflows.
-7. Add rate limiting / abuse protection, email verification, password reset UX, account deletion, privacy policy and terms.
-8. Replace UID-only DM discovery with an approved directory/invite system.
-9. Add Cloud Functions/Cloud Run for counters, notifications, moderation queues and billing webhooks.
+## Feature audit completed
+- Firebase initialization and auth flows: source/syntax checked.
+- Profile onboarding/edit/sign-out/password reset: source checked.
+- Community discovery/listeners: fixed a realtime bug that could remove private member communities when the public-community listener updated.
+- Public community joining: retained transactional membership/count update.
+- Private invite joining: fixed security gap so direct membership creation cannot bypass the invite requirement; invite redemption records the invite code.
+- Community chat: query/rules reviewed; message length and membership checks retained.
+- Message delete/report: source/rules checked.
+- Community leave: fixed to use a Firestore transaction and matching decrement rule.
+- Owner member removal: fixed to use a transaction and avoid attempting to delete another user's private membership document, which the client rules correctly prohibit.
+- Community deletion: owner-only confirmation retained. Note: deleting the parent community document does not cascade-delete Firestore subcollections; server-side cleanup is still recommended for true permanent deletion.
+- Direct messages: list query no longer depends on the problematic composite `updatedAt` index. Block enforcement was added to thread creation/message creation rules.
+- Events/RSVP: source/rules checked. Event creation remains available to signed-in users; consider community-admin-only events before public launch if desired.
+- Prayer times/Qibla: source checked; depends on browser geolocation permission and the AlAdhan API.
+- Quran/Hadith cards: currently roadmap placeholders, not implemented modules.
+- Multilingual UI: English, Arabic/RTL, French, Hausa translations retained. Some dynamic/long-form copy remains English where no translation key exists.
+- Responsive layout: CSS includes mobile navigation and small-screen layouts.
 
-## Deploy with Firebase CLI
-```bash
-firebase login
-firebase use halalchat-edece
-firebase deploy --only firestore:rules
-firebase deploy --only hosting
-```
-
-## Deploy with Vercel
-Keep `index.html` at the repository root. Vercel can serve the static site directly. Firestore rules are deployed separately with the Firebase CLI.
-
-## Important
-The frontend Firebase configuration is not a server secret. Security comes from Authentication, Firestore Security Rules, App Check and server-side controls. Do not commit Firebase service-account JSON files, private keys, payment secrets or API secrets.
-
-
-## Account onboarding
-The site now includes a polished Sign in / Create account flow with email/password, Google sign-in, password reset, and profile onboarding. New email accounts are asked for a display name and optional bio, location, and interests. Email verification is requested after email/password registration.
-
-In Firebase Console, enable **Anonymous**, **Email/Password**, and optionally **Google** under Authentication → Sign-in method. Configure the authorized domain for your deployed Vercel site if Firebase asks for it.
-
-Multilingual repair note:
-- English, Arabic (RTL), French, and Hausa language selector restored safely.
-- Translation is applied at runtime to static and modal UI text without altering Firebase logic.
-- Existing Firestore rules are retained; no rules change is required for language support.
+## Known production hardening still recommended
+- Firebase App Check.
+- Server-side rate limiting and abuse controls.
+- Cloud Functions/Cloud Run for trusted moderation and cascade deletion.
+- Privacy Policy / Terms / account deletion flow.
+- Payment webhooks before accepting Pro payments.
+- Server-side notification delivery.
+- Full automated browser/E2E tests against a staging Firebase project.
