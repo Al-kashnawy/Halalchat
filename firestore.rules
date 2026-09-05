@@ -32,7 +32,7 @@ service cloud.firestore {
 
       match /members/{uid} {
         allow read: if member(cid) || owner(cid) || self(uid);
-        allow create: if (self(uid) && request.resource.data.status == 'active' && ((get(/databases/$(database)/documents/communities/$(cid)).data.visibility == 'public') || (request.resource.data.inviteCode is string && exists(/databases/$(database)/documents/communities/$(cid)/invites/$(request.resource.data.inviteCode)) && get(/databases/$(database)/documents/communities/$(cid)/invites/$(request.resource.data.inviteCode)).data.active == true))) || (admin(cid) && request.resource.data.role in ['member','moderator','admin']);
+        allow create: if (self(uid) && request.resource.data.status == 'active' && ((get(/databases/$(database)/documents/communities/$(cid)).data.visibility == 'public') || (request.resource.data.inviteCode is string && exists(/databases/$(database)/documents/inviteCodes/$(request.resource.data.inviteCode)) && get(/databases/$(database)/documents/inviteCodes/$(request.resource.data.inviteCode)).data.active == true && get(/databases/$(database)/documents/inviteCodes/$(request.resource.data.inviteCode)).data.communityId == cid))) || (admin(cid) && request.resource.data.role in ['member','moderator','admin']);
         allow update: if owner(cid) || self(uid);
         allow delete: if owner(cid) || self(uid);
       }
