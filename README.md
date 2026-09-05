@@ -1,36 +1,29 @@
-# Halal Chat — multilingual production candidate
+# Halal Chat — production package
 
-Languages: English, Arabic (RTL), French, Hausa.
+This package contains the Halal Chat single-page app, Firestore rules, and Firebase Hosting configuration.
 
-## Before deployment
-1. Deploy Hosting and Firestore rules together: `firebase deploy`.
-2. In Firebase Authentication, enable Anonymous, Email/Password, and optionally Google sign-in.
-3. Confirm Firestore is enabled for the `halalchat-edece` project.
-4. Test on a phone and desktop after deployment.
+## Deploy
 
-## Feature audit completed
-- Firebase initialization and auth flows: source/syntax checked.
-- Profile onboarding/edit/sign-out/password reset: source checked.
-- Community discovery/listeners: fixed a realtime bug that could remove private member communities when the public-community listener updated.
-- Public community joining: retained transactional membership/count update.
-- Private invite joining: fixed security gap so direct membership creation cannot bypass the invite requirement; invite redemption records the invite code.
-- Community chat: query/rules reviewed; message length and membership checks retained.
-- Message delete/report: source/rules checked.
-- Community leave: fixed to use a Firestore transaction and matching decrement rule.
-- Owner member removal: fixed to use a transaction and avoid attempting to delete another user's private membership document, which the client rules correctly prohibit.
-- Community deletion: owner-only confirmation retained. Note: deleting the parent community document does not cascade-delete Firestore subcollections; server-side cleanup is still recommended for true permanent deletion.
-- Direct messages: list query no longer depends on the problematic composite `updatedAt` index. Block enforcement was added to thread creation/message creation rules.
-- Events/RSVP: source/rules checked. Event creation remains available to signed-in users; consider community-admin-only events before public launch if desired.
-- Prayer times/Qibla: source checked; depends on browser geolocation permission and the AlAdhan API.
-- Quran/Hadith cards: currently roadmap placeholders, not implemented modules.
-- Multilingual UI: English, Arabic/RTL, French, Hausa translations retained. Some dynamic/long-form copy remains English where no translation key exists.
-- Responsive layout: CSS includes mobile navigation and small-screen layouts.
+1. Put the contents of `halalchat-multilang-fixed/` in your Firebase project directory.
+2. Make sure Firebase Authentication has Anonymous and Email/Password enabled; Google is optional.
+3. Deploy Hosting and Firestore rules together:
 
-## Known production hardening still recommended
-- Firebase App Check.
-- Server-side rate limiting and abuse controls.
-- Cloud Functions/Cloud Run for trusted moderation and cascade deletion.
-- Privacy Policy / Terms / account deletion flow.
-- Payment webhooks before accepting Pro payments.
-- Server-side notification delivery.
-- Full automated browser/E2E tests against a staging Firebase project.
+```bash
+firebase deploy
+```
+
+## Private community invitations
+
+Private communities now support **shareable invite links**. A community admin can open **Info → Invite members**, then use **Copy link** or the device **Share** button.
+
+The generated link has this form:
+
+`https://halalchat.vercel.app/?invite=XXXXXXXX`
+
+When another member opens the link, Halal Chat validates the invitation, shows the community name, and lets the recipient tap **Join community**. The 8-character code remains available as a fallback.
+
+The invite is stored in `inviteCodes/{code}` and the Firestore rules verify that the invite is active and belongs to the target community before a member record can be created.
+
+## Important production hardening
+
+Before a large public launch, add Firebase App Check, server-side moderation/rate limiting, account deletion/privacy controls, payment webhooks, notification infrastructure, and server-side cascade cleanup for deleted communities.
