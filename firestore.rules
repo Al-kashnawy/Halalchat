@@ -6,6 +6,12 @@ service cloud.firestore {
     function member(cid) { return signedIn() && exists(/databases/$(database)/documents/communities/$(cid)/members/$(request.auth.uid)); }
     function owner(cid) { return signedIn() && get(/databases/$(database)/documents/communities/$(cid)).data.ownerId == request.auth.uid; }
     function admin(cid) { return owner(cid) || (member(cid) && get(/databases/$(database)/documents/communities/$(cid)/members/$(request.auth.uid)).data.role in ['admin','moderator','owner']); }
+    function isPlatformAdmin() { return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+
+    match /admins/{uid} {
+      allow read: if self(uid);
+      allow write: if false; // grant access manually via the Firestore console
+    }
 
     match /users/{uid} {
       allow read: if self(uid);
@@ -40,7 +46,7 @@ service cloud.firestore {
         allow read: if member(cid) || owner(cid);
         allow create, update, delete: if admin(cid);
         match /messages/{mid} {
-          allow read: if member(cid) || owner(cid);
+          allow read: if member(cid) || owner(cid) || isPlatformAdmin();
           allow create: if member(cid) && request.resource.data.uid == request.auth.uid && request.resource.data.text is string && request.resource.data.text.size() <= 4000;
           allow update, delete: if member(cid) && resource.data.uid == request.auth.uid;
         }
@@ -52,7 +58,7 @@ service cloud.firestore {
       allow create: if signedIn() && request.auth.uid in request.resource.data.memberIds && request.resource.data.memberIds.size() == 2 && !exists(/databases/$(database)/documents/users/$(request.resource.data.memberIds[0])/blocks/$(request.resource.data.memberIds[1])) && !exists(/databases/$(database)/documents/users/$(request.resource.data.memberIds[1])/blocks/$(request.resource.data.memberIds[0]));
       allow update, delete: if signedIn() && request.auth.uid in resource.data.memberIds;
       match /messages/{mid} {
-        allow read: if signedIn() && request.auth.uid in get(/databases/$(database)/documents/threads/$(tid)).data.memberIds;
+        allow read: if signedIn() && (request.auth.uid in get(/databases/$(database)/documents/threads/$(tid)).data.memberIds || isPlatformAdmin());
         allow create: if signedIn() && request.auth.uid in get(/databases/$(database)/documents/threads/$(tid)).data.memberIds && request.resource.data.uid == request.auth.uid && request.resource.data.text is string && request.resource.data.text.size() <= 4000 && !exists(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[0])/blocks/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[1])) && !exists(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[1])/blocks/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[0]));
         allow update, delete: if signedIn() && resource.data.uid == request.auth.uid;
       }
