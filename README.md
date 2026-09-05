@@ -27,3 +27,14 @@ The invite is stored in `inviteCodes/{code}` and the Firestore rules verify that
 ## Important production hardening
 
 Before a large public launch, add Firebase App Check, server-side moderation/rate limiting, account deletion/privacy controls, payment webhooks, notification infrastructure, and server-side cascade cleanup for deleted communities.
+
+
+## IMPORTANT: Firebase rules deployment
+Vercel only hosts the web page. Private-community joining is enforced by Firebase Firestore Security Rules, so deploying the HTML to Vercel alone is NOT enough. Deploy the included `firestore.rules` to the `halalchat-edece` Firebase project:
+
+```bash
+firebase use halalchat-edece
+firebase deploy --only firestore:rules
+```
+
+Then deploy the web app to Vercel. If joining still says it was blocked by Firestore rules, the deployed Firebase rules are not the included rules yet.
