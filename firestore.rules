@@ -25,10 +25,11 @@ service cloud.firestore {
       allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid && request.resource.data.memberCount == 1;
       allow update: if owner(cid)
         || (signedIn()
-          && exists(/databases/$(database)/documents/communities/$(cid)/members/$(request.auth.uid))
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberCount','updatedAt'])
-          && request.resource.data.memberCount == resource.data.memberCount - 1
-          && !existsAfter(/databases/$(database)/documents/communities/$(cid)/members/$(request.auth.uid))) ;
+          && (
+            (request.resource.data.memberCount == resource.data.memberCount + 1 && existsAfter(/databases/$(database)/documents/communities/$(cid)/members/$(request.auth.uid)))
+            || (request.resource.data.memberCount == resource.data.memberCount - 1 && !existsAfter(/databases/$(database)/documents/communities/$(cid)/members/$(request.auth.uid)))
+          ));
       allow delete: if owner(cid);
 
       match /members/{uid} {
