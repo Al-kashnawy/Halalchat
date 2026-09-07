@@ -13,6 +13,12 @@ service cloud.firestore {
       allow write: if false; // grant access manually via the Firestore console
     }
 
+    match /notifications/{nid} {
+      allow read, update: if signedIn() && resource.data.toUid == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.fromUid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.toUid == request.auth.uid;
+    }
+
     match /users/{uid} {
       allow read: if self(uid);
       allow create, update: if self(uid);
@@ -48,7 +54,7 @@ service cloud.firestore {
         allow create, update, delete: if admin(cid);
         match /messages/{mid} {
           allow read: if member(cid) || owner(cid) || isPlatformAdmin();
-          allow create: if member(cid) && request.resource.data.uid == request.auth.uid && request.resource.data.text is string && request.resource.data.text.size() <= 4000;
+          allow create: if member(cid) && request.resource.data.uid == request.auth.uid && ((request.resource.data.text is string && request.resource.data.text.size() <= 4000) || request.resource.data.fileUrl is string);
           allow update, delete: if member(cid) && resource.data.uid == request.auth.uid;
         }
       }
@@ -60,7 +66,7 @@ service cloud.firestore {
       allow update, delete: if signedIn() && request.auth.uid in resource.data.memberIds;
       match /messages/{mid} {
         allow read: if signedIn() && (request.auth.uid in get(/databases/$(database)/documents/threads/$(tid)).data.memberIds || isPlatformAdmin());
-        allow create: if signedIn() && request.auth.uid in get(/databases/$(database)/documents/threads/$(tid)).data.memberIds && request.resource.data.uid == request.auth.uid && request.resource.data.text is string && request.resource.data.text.size() <= 4000 && !exists(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[0])/blocks/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[1])) && !exists(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[1])/blocks/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[0]));
+        allow create: if signedIn() && request.auth.uid in get(/databases/$(database)/documents/threads/$(tid)).data.memberIds && request.resource.data.uid == request.auth.uid && ((request.resource.data.text is string && request.resource.data.text.size() <= 4000) || request.resource.data.fileUrl is string) && !exists(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[0])/blocks/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[1])) && !exists(/databases/$(database)/documents/users/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[1])/blocks/$(get(/databases/$(database)/documents/threads/$(tid)).data.memberIds[0]));
         allow update, delete: if signedIn() && resource.data.uid == request.auth.uid;
       }
     }
